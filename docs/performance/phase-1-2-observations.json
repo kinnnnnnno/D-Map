@@ -1,0 +1,455 @@
+{
+  "method": "Visible interactive map, one zoom-in/out cycle per viewport. Same browser session and cache. Not a load test; response timing is not paint timing.",
+  "samples": [
+    {
+      "name": "pc-initial",
+      "observedAt": "2026-10-19T10:37:53.008Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "zoom": "11",
+      "intervalStart": 0,
+      "resourceCount": 12,
+      "responseSpanMs": 7.899999618530273,
+      "fromIntervalStartMs": 1397.3999996185303,
+      "loadedTiles": 12,
+      "pendingTiles": 0,
+      "failedTiles": 0,
+      "reactCommits": 1,
+      "mapPanes": 1,
+      "markerNodes": 3,
+      "tiles": [
+        {
+          "url": "https://tile.openstreetmap.org/11/1818/806.png",
+          "startTime": 1389.5,
+          "responseEnd": 1389.5,
+          "duration": 0,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/11/1819/806.png",
+          "startTime": 1391.0999994277954,
+          "responseEnd": 1391.0999994277954,
+          "duration": 0,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/11/1818/805.png",
+          "startTime": 1392,
+          "responseEnd": 1392,
+          "duration": 0,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/11/1819/805.png",
+          "startTime": 1392.8000001907349,
+          "responseEnd": 1392.8000001907349,
+          "duration": 0,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/11/1818/807.png",
+          "startTime": 1393.3999996185303,
+          "responseEnd": 1393.3999996185303,
+          "duration": 0,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/11/1819/807.png",
+          "startTime": 1394,
+          "responseEnd": 1394,
+          "duration": 0,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/11/1817/806.png",
+          "startTime": 1394.6999998092651,
+          "responseEnd": 1394.6999998092651,
+          "duration": 0,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/11/1820/806.png",
+          "startTime": 1395.1999998092651,
+          "responseEnd": 1395.1999998092651,
+          "duration": 0,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/11/1817/805.png",
+          "startTime": 1395.8999996185303,
+          "responseEnd": 1395.8999996185303,
+          "duration": 0,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/11/1820/805.png",
+          "startTime": 1396.5,
+          "responseEnd": 1396.5,
+          "duration": 0,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/11/1817/807.png",
+          "startTime": 1397.0999994277954,
+          "responseEnd": 1397.0999994277954,
+          "duration": 0,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/11/1820/807.png",
+          "startTime": 1397.3999996185303,
+          "responseEnd": 1397.3999996185303,
+          "duration": 0,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        }
+      ]
+    },
+    {
+      "name": "pc-zoom-in",
+      "observedAt": "2026-10-19T10:38:18.684Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "zoom": "12",
+      "intervalStart": 12467.800000190735,
+      "resourceCount": 10,
+      "responseSpanMs": 1294.3999996185303,
+      "fromIntervalStartMs": 1793.8999996185303,
+      "loadedTiles": 8,
+      "pendingTiles": 0,
+      "failedTiles": 0,
+      "reactCommits": 1,
+      "mapPanes": 1,
+      "markerNodes": 6,
+      "tiles": [
+        {
+          "url": "https://tile.openstreetmap.org/12/3637/1612.png",
+          "startTime": 12967.300000190735,
+          "responseEnd": 13314.89999961853,
+          "duration": 347.5999994277954,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/12/3638/1612.png",
+          "startTime": 12967.699999809265,
+          "responseEnd": 13315.599999427795,
+          "duration": 347.8999996185303,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/12/3637/1613.png",
+          "startTime": 12967.699999809265,
+          "responseEnd": 13318.39999961853,
+          "duration": 350.69999980926514,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/12/3638/1613.png",
+          "startTime": 12967.800000190735,
+          "responseEnd": 13319.39999961853,
+          "duration": 351.5999994277954,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/12/3636/1612.png",
+          "startTime": 12967.800000190735,
+          "responseEnd": 13320.199999809265,
+          "duration": 352.3999996185303,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/12/3639/1612.png",
+          "startTime": 12967.800000190735,
+          "responseEnd": 13678.39999961853,
+          "duration": 710.5999994277954,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/12/3636/1613.png",
+          "startTime": 12967.89999961853,
+          "responseEnd": 13378.300000190735,
+          "duration": 410.4000005722046,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/12/3639/1613.png",
+          "startTime": 12967.89999961853,
+          "responseEnd": 13679.099999427795,
+          "duration": 711.1999998092651,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/12/3637/1612.png",
+          "startTime": 13329.300000190735,
+          "responseEnd": 14261.699999809265,
+          "duration": 932.3999996185303,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/12/3639/1613.png",
+          "startTime": 13685.099999427795,
+          "responseEnd": 14182,
+          "duration": 496.9000005722046,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        }
+      ]
+    },
+    {
+      "name": "pc-zoom-back",
+      "observedAt": "2026-10-19T10:39:12.084Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "zoom": "11",
+      "intervalStart": 27921.39999961853,
+      "resourceCount": 0,
+      "responseSpanMs": null,
+      "fromIntervalStartMs": null,
+      "loadedTiles": 12,
+      "pendingTiles": 0,
+      "failedTiles": 0,
+      "reactCommits": 1,
+      "mapPanes": 1,
+      "markerNodes": 7,
+      "tiles": []
+    },
+    {
+      "name": "mobile-resized-baseline",
+      "observedAt": "2026-10-19T10:39:13.841Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "zoom": "11",
+      "intervalStart": 82233.39999961853,
+      "resourceCount": 0,
+      "responseSpanMs": null,
+      "fromIntervalStartMs": null,
+      "loadedTiles": 12,
+      "pendingTiles": 0,
+      "failedTiles": 0,
+      "reactCommits": 1,
+      "mapPanes": 1,
+      "markerNodes": 7,
+      "tiles": []
+    },
+    {
+      "name": "mobile-zoom-in",
+      "observedAt": "2026-10-19T10:40:39.801Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "zoom": "12",
+      "intervalStart": 93442,
+      "resourceCount": 4,
+      "responseSpanMs": 69,
+      "fromIntervalStartMs": 421.5999994277954,
+      "loadedTiles": 4,
+      "pendingTiles": 0,
+      "failedTiles": 0,
+      "reactCommits": 1,
+      "mapPanes": 1,
+      "markerNodes": 10,
+      "tiles": [
+        {
+          "url": "https://tile.openstreetmap.org/12/3637/1612.png",
+          "startTime": 93794.5999994278,
+          "responseEnd": 93851.69999980927,
+          "duration": 57.10000038146973,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/12/3638/1612.png",
+          "startTime": 93794.89999961853,
+          "responseEnd": 93854.5,
+          "duration": 59.60000038146973,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/12/3637/1613.png",
+          "startTime": 93795.0999994278,
+          "responseEnd": 93857.69999980927,
+          "duration": 62.60000038146973,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/12/3638/1613.png",
+          "startTime": 93795.0999994278,
+          "responseEnd": 93863.5999994278,
+          "duration": 68.5,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        }
+      ]
+    },
+    {
+      "name": "mobile-zoom-back",
+      "observedAt": "2026-10-19T10:40:50.674Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "zoom": "11",
+      "intervalStart": 168970.69999980927,
+      "resourceCount": 6,
+      "responseSpanMs": 471.8999996185303,
+      "fromIntervalStartMs": 871.8999996185303,
+      "loadedTiles": 6,
+      "pendingTiles": 0,
+      "failedTiles": 0,
+      "reactCommits": 1,
+      "mapPanes": 1,
+      "markerNodes": 11,
+      "tiles": [
+        {
+          "url": "https://tile.openstreetmap.org/11/1818/806.png",
+          "startTime": 169370.69999980927,
+          "responseEnd": 169842.5999994278,
+          "duration": 471.8999996185303,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/11/1819/806.png",
+          "startTime": 169371,
+          "responseEnd": 169387.0999994278,
+          "duration": 16.09999942779541,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/11/1818/805.png",
+          "startTime": 169634.5,
+          "responseEnd": 169649.5,
+          "duration": 15,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/11/1819/805.png",
+          "startTime": 169635,
+          "responseEnd": 169652.80000019073,
+          "duration": 17.800000190734863,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/11/1818/807.png",
+          "startTime": 169635.5999994278,
+          "responseEnd": 169657.30000019073,
+          "duration": 21.700000762939453,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        },
+        {
+          "url": "https://tile.openstreetmap.org/11/1819/807.png",
+          "startTime": 169635.89999961853,
+          "responseEnd": 169662.5999994278,
+          "duration": 26.699999809265137,
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "deliveryType": "",
+          "responseStatus": 0
+        }
+      ]
+    }
+  ]
+}

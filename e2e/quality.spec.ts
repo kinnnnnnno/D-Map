@@ -2,7 +2,8 @@ import { expect, test, type Page } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
   // JSTでは10/19、LAでは10/18となる瞬間に固定し、端末日付への依存を検出します。
-  await page.clock.setFixedTime(new Date("2026-10-18T15:30:00Z"));
+  // Dateを止めるとLeafletのパンが完了しないため、基準日時を設定して時計は進めます。
+  await page.clock.install({ time: new Date("2026-10-18T15:30:00Z") });
   // E2Eは外部タイル配信・フォントに依存させません。実際のOSM表示は別途ブラウザで確認。
   await page.route("https://tile.openstreetmap.org/**", (route) =>
     route.fulfill({
@@ -58,6 +59,22 @@ async function expectMapCovered(page: Page) {
       }),
     )
     .toEqual([true, true, true, true]);
+}
+async function revealIndividualMarkers(page: Page) {
+  // Phase 1.2では近接地点が集約されるので、個別ピンの既存検証は拡大してから行います。
+  for (
+    let attempt = 0;
+    attempt < 8 && (await page.locator(".cluster-pin").count()) > 0;
+    attempt++
+  ) {
+    const previousZoom = await page.locator(".map").getAttribute("data-zoom");
+    await page.getByRole("button", { name: "Zoom in", exact: true }).click();
+    await expect(page.locator(".map")).not.toHaveAttribute(
+      "data-zoom",
+      previousZoom!,
+    );
+  }
+  await expect(page.locator(".cluster-pin")).toHaveCount(0);
 }
 
 test("UI-001 JSTの過去日を無効化し、今日・明日・月末・翌年をカレンダーで選べる", async ({
@@ -156,6 +173,7 @@ test("UI-001 カレンダーを矢印・Enter・Escapeで操作できる", async
   );
 });
 test("UI-002 凡例とピンの色・文字が一致し番号がない", async ({ page }) => {
+  await revealIndividualMarkers(page);
   const legend = page.getByLabel("ジャンル別マーカーの凡例");
   for (const key of ["breaking", "hiphop", "pop", "lock", "other"]) {
     const pin = page.locator('.event-pin[data-genre="' + key + '"]').first();
@@ -183,6 +201,7 @@ test("UI-002 凡例とピンの色・文字が一致し番号がない", async (
 test("UI-002 同地点の全イベントを確認し、ピンと一覧の選択が連動する", async ({
   page,
 }) => {
+  await revealIndividualMarkers(page);
   await page.getByRole("button", { name: /同じ場所のイベント：/ }).click();
   const popup = page.locator(".location-popup");
   await expect(popup).toContainText("放課後 HIP HOP PRACTICE");
@@ -223,6 +242,7 @@ test("UI-002 絞り込みで同地点の別イベントやgroupが残らない",
 test("UI-003 拡大中に検索し、条件・選択・描画領域を維持して戻れる", async ({
   page,
 }) => {
+  await revealIndividualMarkers(page);
   await page.getByRole("button", { name: /同じ場所のイベント：/ }).click();
   const marker = page.locator(".event-pin.is-selected");
   await expect(marker).toHaveCount(1);

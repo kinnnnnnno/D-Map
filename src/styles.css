@@ -1082,7 +1082,7 @@ footer small {
   font-weight: 700;
 }
 .location-popup {
-  max-height: min(350px, 45dvh);
+  max-height: min(350px, var(--popup-max-height, 35dvh));
   overflow-y: auto;
   padding: 3px;
 }
@@ -1278,5 +1278,128 @@ footer small {
   }
   .workspace-expanded .map-legend {
     bottom: 30px;
+  }
+}
+
+/* Phase 1.2: 地図の操作領域と情報表示を別の行にし、重なりをレイアウトで防ぎます。 */
+.map-section {
+  display: flex;
+  flex-direction: column;
+  height: 550px;
+}
+.map-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  padding: 8px 12px;
+  min-height: 60px;
+  flex-shrink: 0;
+  background: #fffefb;
+  border-bottom: 1px solid var(--line);
+}
+.map-header .map-label {
+  position: static;
+  padding: 0;
+  background: none;
+  box-shadow: none;
+  font-size: 10px;
+}
+.map-header .map-result-count {
+  position: static;
+  margin: 0;
+  padding: 0;
+  background: none;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--green);
+  white-space: nowrap;
+}
+.map-header .map-expand-button {
+  position: static;
+  margin-left: auto;
+  box-shadow: none;
+}
+.map-canvas {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+.map-canvas .map {
+  height: 100%;
+}
+.map-section .map-legend {
+  position: static;
+  flex-shrink: 0;
+  background: #fffefb;
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  padding: 10px 12px;
+}
+.map-section .map-warning {
+  position: static;
+  margin: 0;
+  flex-shrink: 0;
+  padding: 8px 12px;
+}
+.cluster-face {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: #253a39;
+  color: white;
+  box-shadow:
+    0 0 0 2px #82948f,
+    0 3px 8px #14251c44;
+}
+.cluster-face b {
+  font-size: 18px;
+  line-height: 1.1;
+}
+.cluster-face small {
+  font-size: 8px;
+  line-height: 1.3;
+}
+.cluster-pin.is-selected .cluster-face {
+  outline: 3px solid #aa680b;
+  outline-offset: 3px;
+}
+@media (max-width: 650px) {
+  .map-section {
+    height: 530px;
+  }
+  .map-header {
+    padding: 6px 8px;
+    gap: 6px 10px;
+  }
+  .map-header .map-label {
+    font-size: 9px;
+  }
+  .map-header .map-result-count {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 650px) {
+  .workspace-expanded.search-open {
+    grid-template-rows: auto minmax(280px, 1fr) minmax(0, 35dvh);
+  }
+  .workspace-expanded > .search-panel {
+    grid-row: 3;
+    grid-column: 1;
+    position: static;
+    inset: auto;
+    max-height: none;
+    height: 100%;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 16px 20px;
   }
 }
