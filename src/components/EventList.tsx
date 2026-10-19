@@ -1,5 +1,6 @@
 import type { DanceEvent } from "../types/event";
 import { formatFee, formatPeriod } from "../lib/format";
+import { getMarkerStyle } from "../lib/markers";
 export function EventList({
   events,
   selectedId,
@@ -36,19 +37,27 @@ export function EventList({
         </div>
       ) : (
         <div className="event-grid">
-          {events.map((event, index) => (
+          {events.map((event) => (
             <button
               key={event.id}
               className={`event-card ${selectedId === event.id ? "selected" : ""}`}
               onClick={() => onSelect(event.id)}
               aria-pressed={selectedId === event.id}
+              data-event-id={event.id}
             >
               <div className="card-top">
                 <span className="genre">{event.genre}</span>
                 <span className="event-type">{event.type}</span>
-                <span className="card-number">
-                  {String(index + 1).padStart(2, "0")}
+                <span
+                  className="card-marker-key"
+                  style={{ background: getMarkerStyle(event.genre).color }}
+                  aria-label={`地図の表記 ${getMarkerStyle(event.genre).label}`}
+                >
+                  {getMarkerStyle(event.genre).symbol}
                 </span>
+                {selectedId === event.id && (
+                  <span className="selected-label">選択中</span>
+                )}
               </div>
               <h3>{event.title}</h3>
               <p className="event-time">

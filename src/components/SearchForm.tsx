@@ -1,106 +1,90 @@
-import { useState, type FormEvent } from "react";
-import { eventTypes, genres, type SearchFilters } from "../types/event";
-import { emptyFilters, searchWindow } from "../lib/search";
+﻿import { eventTypes, genres, type SearchFilters } from "../types/event";
+import { emptyFilters } from "../lib/search";
+import { timeOptions } from "../lib/calendar";
+import { DatePicker } from "./DatePicker";
+
 export function SearchForm({
-  onSearch,
+  filters,
+  today,
+  error,
+  onChange,
 }: {
-  onSearch: (filters: SearchFilters) => void;
+  filters: SearchFilters;
+  today: string;
+  error: string;
+  onChange: (filters: SearchFilters) => void;
 }) {
-  const [draft, setDraft] = useState<SearchFilters>({ ...emptyFilters });
-  const [error, setError] = useState("");
-  const update = (key: keyof SearchFilters, value: string) => {
-    setDraft((current) => ({ ...current, [key]: value }));
-    setError("");
-  };
-  function submit(event: FormEvent) {
-    event.preventDefault();
-    try {
-      searchWindow(draft);
-      setError("");
-      onSearch({ ...draft });
-    } catch (error) {
-      setError(
-        error instanceof Error ? error.message : "入力を確認してください。",
-      );
-    }
-  }
+  const update = (key: keyof SearchFilters, value: string) =>
+    onChange({ ...filters, [key]: value });
   return (
-    <aside className="search-panel">
+    <aside
+      className="search-panel"
+      aria-label="イベント検索条件"
+      id="search-panel"
+    >
       <div className="section-kicker">FIND YOUR NEXT SESSION</div>
       <h2>練習を探す</h2>
-      <form onSubmit={submit}>
-        <label htmlFor="date">
-          日付 <span>日本時間 / JST</span>
-        </label>
-        <input
-          id="date"
-          type="date"
-          value={draft.date}
-          onInput={(e) => update("date", e.currentTarget.value)}
-          aria-describedby="time-help"
+      <p className="auto-search-note">条件を変更すると自動で反映されます</p>
+      <form onSubmit={(event) => event.preventDefault()}>
+        <DatePicker
+          value={filters.date}
+          today={today}
+          onChange={(date) => update("date", date)}
         />
         <div className="time-fields">
-          <div>
-            <label htmlFor="start">開始時間</label>
-            <input
-              id="start"
-              type="time"
-              value={draft.startTime}
-              onInput={(e) => update("startTime", e.currentTarget.value)}
-            />
-          </div>
-          <span>—</span>
-          <div>
-            <label htmlFor="end">終了時間</label>
-            <input
-              id="end"
-              type="time"
-              value={draft.endTime}
-              onInput={(e) => update("endTime", e.currentTarget.value)}
-            />
-          </div>
+          {(["startTime", "endTime"] as const).map((key, index) => (
+            <div key={key}>
+              <label htmlFor={key}>
+                {index === 0 ? "開始時間" : "終了時間"}
+              </label>
+              <select
+                id={key}
+                value={filters[key]}
+                aria-describedby="time-help"
+                onChange={(event) => update(key, event.target.value)}
+              >
+                <option value="">指定なし</option>
+                {timeOptions.map((time) => (
+                  <option key={time}>{time}</option>
+                ))}
+              </select>
+            </div>
+          ))}
         </div>
         <p className="field-help" id="time-help">
-          時間は日付と一緒に指定。終了が開始より早い場合は翌日まで検索します。時刻未指定はその日全体が対象です。
+          時刻は15分単位・日付と一緒に指定。未指定は当日全体、開始のみは翌0時まで、終了のみは当日0時から。終了が開始より早ければ翌日まで、同時刻はエラーです。
         </p>
         <label htmlFor="genre">ジャンル</label>
         <select
           id="genre"
-          value={draft.genre}
-          onChange={(e) => update("genre", e.target.value)}
+          value={filters.genre}
+          onChange={(event) => update("genre", event.target.value)}
         >
           <option value="">すべてのジャンル</option>
-          {genres.map((g) => (
-            <option key={g}>{g}</option>
+          {genres.map((genre) => (
+            <option key={genre}>{genre}</option>
           ))}
         </select>
         <label htmlFor="type">イベント種別</label>
         <select
           id="type"
-          value={draft.type}
-          onChange={(e) => update("type", e.target.value)}
+          value={filters.type}
+          onChange={(event) => update("type", event.target.value)}
         >
           <option value="">すべてのイベント</option>
-          {eventTypes.map((t) => (
-            <option key={t}>{t}</option>
+          {eventTypes.map((type) => (
+            <option key={type}>{type}</option>
           ))}
         </select>
         {error && (
           <p role="alert" className="error">
-            {error}
+            {error} 条件を直すまで結果を表示しません。
           </p>
         )}
-        <button className="primary search-button" type="submit">
-          この条件で探す <span aria-hidden="true">↗</span>
-        </button>
         <button
           type="button"
           className="reset"
-          onClick={() => {
-            setDraft({ ...emptyFilters });
-            setError("");
-            onSearch({ ...emptyFilters });
-          }}
+          onClick={() => onChange({ ...emptyFilters })}
         >
           条件をリセット
         </button>
