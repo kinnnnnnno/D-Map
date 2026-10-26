@@ -6,17 +6,47 @@ import {
   useState,
   type KeyboardEvent,
 } from "react";
-import { getPublicEvents } from "./services/eventService";
+import { fetchEvents } from "./services/eventService";
 import { emptyFilters, filterEvents, validateSearchInput } from "./lib/search";
 import { useTodayJst } from "./hooks/useTodayJst";
-import type { SearchFilters } from "./types/event";
+import type { DanceEvent, EventSelection, SearchFilters } from "./types/event";
+import type { Prefecture } from "./data/prefectures";
 import { SearchForm } from "./components/SearchForm";
 import { EventMap } from "./components/EventMap";
 import { EventList } from "./components/EventList";
 import { EventDetail } from "./components/EventDetail";
-const publicEvents = getPublicEvents();
+import { AccountPanel } from "./components/AccountPanel";
+import { api, type UserProfile, type SessionInfo } from "./services/api";
+import { PAGE_SIZE, paginate } from "./lib/pagination";
+import { formatPeriod } from "./lib/format";
+import { lockBodyOverflow } from "./lib/scrollLock";
 export default function App() {
-  const [filters, setFilters] = useState<SearchFilters>({ ...emptyFilters });
+  const [availableEvents, setAvailableEvents] = useState<DanceEvent[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [hasLoaded, setHasLoaded] = useState(false);
+  const [loadError, setLoadError] = useState("");
+  const [reload, setReload] = useState(0);
+  const eventRequest = useRef<AbortController|null>(null);
+  useEffect(() => {
+    const controller = new AbortController();
+    eventRequest.current = controller;
+    setLoading(true);
+    setLoadError("");
+    fetchEvents(controller.signal).then(data => { if (!controller.signal.aborted) {setAvailableEvents(data); setHasLoaded(true);} }).catch(error => {
+      if (!controller.signal.aborted) setLoadError(error instanceof Error ? error.message : "取得に失敗しました。");
+    }).finally(() => { if (!controller.signal.aborted) setLoading(false); });
+    return () => controller.abort();
+  }, [reload]);
+  const demoEvents = availableEvents.filter(event => event.isDemo !== false);
+  const demoPeriod = demoEvents.length ? formatPeriod(
+    new Date(Math.min(...demoEvents.map(event => Date.parse(event.startAt)))).toISOString(),
+    new Date(Math.max(...demoEvents.map(event => Date.parse(event.endAt)))).toISOString(),
+  ) : "未取得";
+  const [filters, setFilters] = useState<SearchFilters>({ ...emptyFilters, prefectures: ["東京都"] });
+  const [user, setUser] = useState<UserProfile|null>(null);
+  useEffect(() => { let active=true; api<SessionInfo>("/auth/session").then(data => {if(active) setUser(data.user);}).catch(()=>{});return()=>{active=false;}; }, []);
+  const [selection, setSelection] = useState<EventSelection | null>(null);
+  const [page, setPage] = useState(1);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [detailId, setDetailId] = useState<string | null>(null);
   const [expanded, setExpanded] = useState(false);
@@ -26,7 +56,7 @@ export default function App() {
   const { events, error } = useMemo(() => {
     try {
       validateSearchInput(filters, today);
-      return { events: filterEvents(publicEvents, filters), error: "" };
+      return { events: filterEvents(availableEvents, filters, true), error: "" };
     } catch (error) {
       return {
         events: [],
@@ -34,20 +64,32 @@ export default function App() {
           error instanceof Error ? error.message : "条件を確認してください。",
       };
     }
-  }, [filters, today]);
+  }, [filters, today, availableEvents]);
   const visibleSelectedId = events.some((event) => event.id === selectedId)
     ? selectedId
     : null;
-  const select = useCallback((id: string) => {
+  const selectOnMap = useCallback((id: string) => {
     setSelectedId(id);
+    setSelection(current => ({ id, source: "map", sequence: (current?.sequence ?? 0) + 1 }));
+    const index = events.findIndex(event => event.id === id);
+    if (index >= 0) setPage(Math.floor(index / PAGE_SIZE) + 1);
+  }, [events]);
+  const detailOnMap = useCallback((id: string) => {
+    selectOnMap(id);
+    setDetailId(id);
+  }, [selectOnMap]);
+  const selectOnList = useCallback((id: string) => {
+    setSelectedId(id);
+    setSelection(current => ({ id, source: "list", sequence: (current?.sequence ?? 0) + 1 }));
     setDetailId(id);
   }, []);
-  const search = (next: SearchFilters) => {
+  const search = useCallback((next: SearchFilters) => {
     setFilters(next);
+    setPage(1);
     try {
       validateSearchInput(next, today);
       const ids = new Set(
-        filterEvents(publicEvents, next).map((event) => event.id),
+        filterEvents(availableEvents, next, true).map((event) => event.id),
       );
       setSelectedId((current) =>
         current && ids.has(current) ? current : null,
@@ -57,15 +99,16 @@ export default function App() {
       setSelectedId(null);
       setDetailId(null);
     }
-  };
+  }, [today, availableEvents]);
+  const changePrefectures = useCallback((prefectures: Prefecture[]) => search({ ...filters, prefectures }), [filters, search]);
+  const expandMap = useCallback(() => { setSearchOpen(false); setExpanded(true); }, []);
   useEffect(() => {
     if (!expanded) return;
-    const overflow = document.body.style.overflow;
+    const releaseOverflow = lockBodyOverflow();
     const currentWorkspace = workspace.current;
-    document.body.style.overflow = "hidden";
     currentWorkspace?.focus({ preventScroll: true });
     return () => {
-      document.body.style.overflow = overflow;
+      releaseOverflow();
       // 通常表示で再生成された起点ボタンへ戻します。古いDOM参照は使いません。
       currentWorkspace
         ?.querySelector<HTMLButtonElement>(".map-expand-button")
@@ -114,6 +157,14 @@ export default function App() {
         <span className="header-tagline">
           練習をもっとオープンに、つながりをもっと自由に。
         </span>
+        <AccountPanel user={user} onUser={next => {
+          if (next?.id !== user?.id) {
+            eventRequest.current?.abort();
+            setAvailableEvents(current => current.filter(event => event.visibility === "public"));
+            setDetailId(null);setSelectedId(null);
+          }
+          setUser(next);
+        }} onChanged={() => {setDetailId(null);setReload(value => value + 1);}} />
         <span className="demo-badge">デモデータ</span>
       </header>
       <main id="main">
@@ -147,11 +198,13 @@ export default function App() {
         <div className="demo-notice" inert={expanded}>
           <span className="notice-label">DEMO</span>
           <p>
-            掲載情報はすべて架空のデモデータです。
-            <span> 2026年10月24日・25日・31日のイベントをお試しください。</span>
+            デモイベントは架空の情報です。ユーザーが作成した予定とは区別して表示します。
+            <span> デモ開催期間：{demoPeriod}（日本時間）。</span>
           </p>
         </div>
-        <div
+        {loading && <p role="status">イベントを読み込み中です。</p>}
+        {loadError && <div role="alert">{loadError}<button onClick={() => setReload(value => value + 1)}>再試行</button></div>}
+        {hasLoaded && <div
           className={`workspace ${expanded ? "workspace-expanded" : ""} ${searchOpen ? "search-open" : ""}`}
           ref={workspace}
           role={expanded ? "dialog" : undefined}
@@ -199,21 +252,23 @@ export default function App() {
             <EventMap
               events={events}
               selectedId={visibleSelectedId}
-              onSelect={setSelectedId}
-              onDetail={select}
+              selection={selection}
+              onSelect={selectOnMap}
+              onDetail={detailOnMap}
               expanded={expanded}
-              onExpand={() => {
-                setSearchOpen(false);
-                setExpanded(true);
-              }}
+              prefectures={filters.prefectures}
+              onPrefecturesChange={changePrefectures}
+              onExpand={expandMap}
             />
             <EventList
               events={events}
               selectedId={visibleSelectedId}
-              onSelect={select}
+              onSelect={selectOnList}
+              page={paginate(events, page).page}
+              onPageChange={setPage}
             />
           </div>
-        </div>
+        </div>}
       </main>
       <footer inert={expanded}>
         <a className="footer-brand" href="/">
@@ -223,6 +278,7 @@ export default function App() {
         <small>PHASE 01 · PORTFOLIO DEMO</small>
       </footer>
       <EventDetail
+        user={user}
         event={events.find((event) => event.id === detailId) ?? null}
         onClose={() => setDetailId(null)}
       />

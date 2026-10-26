@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Page } from "./fixtures/test";
 import { denseEvents } from "./fixtures/denseEvents";
 
 test.beforeEach(async ({ page }) => {
@@ -33,9 +33,9 @@ async function assertTotal(page: Page, count: number) {
 test("UI-004 近接10件と同座標5件を15件と明記し、遠方1件も失わない", async ({
   page,
 }) => {
-  // 15件の詳細を順番に開閉するケースなので、通常の単操作より実行時間を確保します。
-  test.setTimeout(60000);
-  await page.goto(harness);
+  // 15件の開閉と初回のローカルモジュール読み込みを含むため、単操作より長い上限です。
+  test.setTimeout(180000);
+  await page.goto(harness, { waitUntil: "domcontentloaded" });
   await assertTotal(page, 16);
   const cluster = page.getByRole("button", {
     name: "近接イベント15件（数字はイベント件数）",
@@ -53,13 +53,14 @@ test("UI-004 近接10件と同座標5件を15件と明記し、遠方1件も失�
     await expect(page.getByRole("dialog")).toContainText(event.description);
     await page.getByRole("button", { name: "詳細を閉じる" }).click();
   }
+  await page.getByRole("button", {name:"次へ",exact:true}).click();
   await page.locator('.event-card[data-event-id="far-1"]').click();
   await expect(page.getByRole("dialog")).toContainText("far-1の説明");
 });
 test("UI-004 同地点5件は全て個別に選択でき、ジャンル・一覧と対応する", async ({
   page,
 }) => {
-  await page.goto(harness);
+  await page.goto(harness, { waitUntil: "domcontentloaded" });
   await page.getByLabel("イベント種別", { exact: true }).selectOption("練習会");
   await assertTotal(page, 5);
   await expect(page.locator(".cluster-pin")).toHaveCount(0);
@@ -84,7 +85,7 @@ test("UI-004 同地点5件は全て個別に選択でき、ジャンル・一覧
 test("UI-004 ズーム・絞り込み・0件で件数と選択を保持・更新する", async ({
   page,
 }) => {
-  await page.goto(harness);
+  await page.goto(harness, { waitUntil: "domcontentloaded" });
   await page.getByRole("button", { name: /近接イベント15件/ }).click();
   await page
     .locator('.location-popup [data-event-id="near-1"]')
@@ -107,7 +108,7 @@ test("UI-004 ズーム・絞り込み・0件で件数と選択を保持・更新
 test("PERF-001 ズーム時にReactコミットと地図・同構成マーカーの再生成がない", async ({
   page,
 }) => {
-  await page.goto(harness);
+  await page.goto(harness, { waitUntil: "domcontentloaded" });
   await assertTotal(page, 16);
   const pane = page.locator(".leaflet-map-pane"),
     cluster = page.locator(".cluster-pin"),
@@ -161,8 +162,9 @@ function intersects(
 test("UI-005 既存の＋－とモバイルのピンチ操作を維持する", async ({
   page,
 }, testInfo) => {
-  await page.goto("/");
+  await page.goto("/", { waitUntil: "domcontentloaded" });
   const map = page.locator(".map");
+  await expect(map).toHaveAttribute("data-zoom", /^\d+$/);
   let before = await map.getAttribute("data-zoom");
   await page.getByRole("button", { name: "Zoom in", exact: true }).click();
   await expect(map).not.toHaveAttribute("data-zoom", before!);
@@ -196,7 +198,7 @@ test("UI-005 既存の＋－とモバイルのピンチ操作を維持する", a
     await expect(map).not.toHaveAttribute("data-zoom", before!);
     await session.detach();
   }
-  await assertTotal(page, 7);
+  await assertTotal(page, 13);
 });
 for (const width of [375, 768, 1280, 1920])
   for (const expanded of [false, true]) {
@@ -204,7 +206,7 @@ for (const width of [375, 768, 1280, 1920])
       page,
     }, testInfo) => {
       await page.setViewportSize({ width, height: width === 375 ? 812 : 960 });
-      await page.goto("/");
+      await page.goto("/", { waitUntil: "domcontentloaded" });
       if (expanded)
         await page.getByRole("button", { name: /地図を拡大/ }).click();
       const selectors = [

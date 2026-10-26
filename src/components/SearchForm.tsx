@@ -1,5 +1,6 @@
 ﻿import { eventTypes, genres, type SearchFilters } from "../types/event";
 import { emptyFilters } from "../lib/search";
+import { ALL_GENRES } from "../types/event";
 import { timeOptions } from "../lib/calendar";
 import { DatePicker } from "./DatePicker";
 
@@ -14,7 +15,7 @@ export function SearchForm({
   error: string;
   onChange: (filters: SearchFilters) => void;
 }) {
-  const update = (key: keyof SearchFilters, value: string) =>
+  const update = (key: Exclude<keyof SearchFilters, "prefectures" | "genre">, value: string) =>
     onChange({ ...filters, [key]: value });
   return (
     <aside
@@ -58,11 +59,11 @@ export function SearchForm({
         <select
           id="genre"
           value={filters.genre}
-          onChange={(event) => update("genre", event.target.value)}
+          onChange={(event) => onChange({ ...filters, genre: genres.find(genre => genre === event.target.value) ?? ALL_GENRES })}
         >
-          <option value="">すべてのジャンル</option>
+          <option value={ALL_GENRES}>すべてのジャンル</option>
           {genres.map((genre) => (
-            <option key={genre}>{genre}</option>
+            <option key={genre} value={genre}>{genre}</option>
           ))}
         </select>
         <label htmlFor="type">イベント種別</label>
@@ -84,7 +85,7 @@ export function SearchForm({
         <button
           type="button"
           className="reset"
-          onClick={() => onChange({ ...emptyFilters })}
+          onClick={() => onChange({ ...emptyFilters, prefectures: filters.prefectures })}
         >
           条件をリセット
         </button>

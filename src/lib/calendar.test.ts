@@ -15,7 +15,8 @@ import {
   weekday,
 } from "./calendar";
 import { emptyFilters, filterEvents, validateSearchInput } from "./search";
-import { demoEvents } from "../data/events";
+import { legacyEvents as demoEvents } from "../data/legacyEvents.test-fixture";
+import type { SearchFilters } from "../types/event";
 
 describe("UI-001 日本時間・暦", () => {
   it("日本時間の深夜0時を境に今日が変わる", () => {
@@ -148,7 +149,7 @@ describe("UI-001 入力制約と重複検索の整合性", () => {
     expect(() =>
       validateSearchInput({ ...emptyFilters, startTime: "00:15" }, today),
     ).toThrow("日付"));
-  it.each([
+  it.each<[Partial<SearchFilters>, string[]]>([
     [{ date: "2026-10-24" }, ["4", "1", "2", "5"]],
     [{ date: "2026-10-24", startTime: "23:00" }, ["5"]],
     [{ date: "2026-10-25", endTime: "01:00" }, ["5"]],

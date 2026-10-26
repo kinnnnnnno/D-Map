@@ -1,6 +1,7 @@
 ﻿import { useEffect, useMemo, useRef, useState } from "react";
 import L from "leaflet";
-import type { DanceEvent } from "../types/event";
+import { memo } from "react";
+import type { DanceEvent, EventSelection } from "../types/event";
 import { formatPeriod } from "../lib/format";
 import {
   getMarkerStyle,
@@ -8,6 +9,9 @@ import {
   markerStyles,
 } from "../lib/markers";
 import { clusterLocations, type MapGroup } from "../lib/clusters";
+import type { Prefecture } from "../data/prefectures";
+import { PrefecturePicker } from "./PrefecturePicker";
+import { isMarkerVisible, popupPanOffset } from "../lib/mapSelection";
 
 interface EventMapProps {
   events: DanceEvent[];
@@ -16,14 +20,20 @@ interface EventMapProps {
   onDetail: (id: string) => void;
   expanded: boolean;
   onExpand: () => void;
+  prefectures?: readonly Prefecture[];
+  onPrefecturesChange?: (prefectures: Prefecture[]) => void;
+  selection?: EventSelection | null;
 }
-export function EventMap({
+export const EventMap = memo(function EventMap({
   events,
   selectedId,
   onSelect,
   onDetail,
   expanded,
   onExpand,
+  prefectures,
+  onPrefecturesChange,
+  selection,
 }: EventMapProps) {
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<L.Map | null>(null);
@@ -32,6 +42,8 @@ export function EventMap({
   const refreshSelection = useRef<(open?: boolean) => void>(() => {});
   const [tileError, setTileError] = useState(false);
   const locations = useMemo(() => groupEventLocations(events), [events]);
+  const lastRegion = useRef<string | undefined>(undefined);
+  const regionKey = prefectures?.slice().sort().join("|");
   useEffect(() => {
     if (!container.current) return;
     const instance = L.map(container.current, {
@@ -59,6 +71,8 @@ export function EventMap({
       observer.disconnect();
       instance.remove();
       map.current = null;
+      // StrictModeの開発時再セットアップでも、新しい地図には初期範囲を適用する。
+      lastRegion.current = undefined;
     };
   }, []);
   useEffect(() => {
@@ -121,7 +135,7 @@ export function EventMap({
         }
       });
       if (open && activeMarker && !activeMarker.isPopupOpen()) {
-        // LeafletのautoPanに任せ、概要を収めた後に中心へ戻して隠してしまわないようにします。
+        // popupopenで、概要がはみ出す分だけ補正します。
         activeMarker.openPopup();
       }
     }
@@ -199,6 +213,20 @@ export function EventMap({
       });
       return popup;
     }
+    function keepPopupVisible(marker: L.Marker) {
+      const popup = marker.getPopup();
+      if (!popup) return;
+      popup.options.maxWidth = Math.min(320, Math.max(180, instance!.getSize().x - 60));
+      popup.options.minWidth = Math.min(220, popup.options.maxWidth);
+      popup.update();
+      const element = popup.getElement();
+      if (!element) return;
+      const offset = popupPanOffset(element.getBoundingClientRect(), instance!.getContainer().getBoundingClientRect());
+      if (offset.x || offset.y) instance!.panBy([offset.x, offset.y], {
+        animate: !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+        duration: 0.25,
+      });
+    }
     function createMarker(group: MapGroup): L.Marker {
       const clustered = group.locations.length > 1;
       const first = group.locations[0].events[0],
@@ -245,11 +273,12 @@ export function EventMap({
           maxWidth: 320,
           minWidth: 220,
           autoPanPadding: [20, 30],
+          autoPan: false,
         })
         .on("click", () => {
           if (!clustered) onSelect(first.id);
         })
-        .on("popupopen", () => updateSelection(false))
+        .on("popupopen", () => { updateSelection(false); keepPopupVisible(marker); })
         .addTo(layer);
       const element = marker.getElement();
       element?.setAttribute("aria-label", label);
@@ -286,7 +315,7 @@ export function EventMap({
       updateSelection();
     }
     // 検索変更時だけ全件を収めます。ズーム・パン・拡大切替では検索Effectを再実行しません。
-    if (locations.length)
+    if (regionKey === undefined && locations.length)
       instance.fitBounds(
         L.latLngBounds(
           locations.map(
@@ -297,25 +326,62 @@ export function EventMap({
         { padding: [50, 50], maxZoom: 13, animate: false },
       );
     instance.on("zoomend", renderGroups);
+    const recordView = () => {
+      const center = instance.getCenter();
+      container.current?.setAttribute("data-center", `${center.lat.toFixed(6)},${center.lng.toFixed(6)}`);
+    };
+    instance.on("moveend", recordView);
+    recordView();
     renderGroups();
     refreshSelection.current = updateSelection;
-    updateSelection(true);
+    updateSelection(false);
     return () => {
       instance.off("zoomend", renderGroups);
+      instance.off("moveend", recordView);
       layer.remove();
       currentMarkers.clear();
       refreshSelection.current = () => {};
     };
-  }, [locations, onSelect, onDetail]);
+  }, [locations, onSelect, onDetail, regionKey]);
+  useEffect(() => {
+    if (regionKey === undefined || regionKey === lastRegion.current) return;
+    lastRegion.current = regionKey;
+    if (!locations.length) return;
+    // 地域変更だけで全件を収める。選択・ページ・他のフィルター変更では再実行しない。
+    map.current?.fitBounds(L.latLngBounds(locations.map(location => [location.latitude, location.longitude] as [number, number])),
+      { padding: [60, 60], maxZoom: 13, animate: false });
+  }, [regionKey, locations]);
   useEffect(() => {
     selected.current = selectedId;
-    refreshSelection.current(true);
-  }, [selectedId]);
+    const instance = map.current;
+    const marker = selectedId ? markers.current.get(selectedId) : undefined;
+    if (!instance || !marker) { refreshSelection.current(false); return; }
+    const fromList = selection?.id === selectedId && selection.source === "list";
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // 一覧選択ではモーダルに詳細があるため、ポップアップによる追加パンは不要。
+    if (fromList) {
+      instance.closePopup();
+      const point = instance.latLngToContainerPoint(marker.getLatLng());
+      const rect = instance.getContainer().getBoundingClientRect();
+      const occluders = Array.from(instance.getContainer().querySelectorAll<HTMLElement>(".leaflet-control"))
+        .map(element => element.getBoundingClientRect())
+        .map(box => ({ left: box.left - rect.left, top: box.top - rect.top, right: box.right - rect.left, bottom: box.bottom - rect.top }));
+      const visible = isMarkerVisible(point, instance.getSize(), occluders);
+      instance.getContainer().dataset.selectionPan = visible ? "none" : reduced ? "instant" : "animated";
+      if (!visible) instance.panTo(marker.getLatLng(), { animate: !reduced, duration: 0.35 });
+      refreshSelection.current(false);
+    } else {
+      // ピン操作は中心を設定せず、ポップアップがはみ出す分だけ補正する。
+      instance.getContainer().dataset.selectionPan = "popup-only";
+      refreshSelection.current(true);
+    }
+  }, [selectedId, selection]);
   return (
     <section className="map-section" aria-label="イベントの地図">
       <div className="map-header">
         <div className="map-label">
-          <span className="live-dot" /> TOKYO <span>東京都内</span>
+          {onPrefecturesChange ? <PrefecturePicker selected={prefectures ?? []} onChange={onPrefecturesChange} />
+            : <><span className="live-dot" /> TOKYO <span>東京都内</span></>}
         </div>
         <p className="map-result-count" role="status">
           {events.length}件を表示
@@ -360,4 +426,4 @@ export function EventMap({
       </div>
     </section>
   );
-}
+});

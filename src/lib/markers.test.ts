@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getMarkerStyle, groupEventLocations, markerStyles } from "./markers";
-import { demoEvents } from "../data/events";
+import { legacyEvents as demoEvents } from "../data/legacyEvents.test-fixture";
 import { emptyFilters, filterEvents } from "./search";
 describe("UI-002 ジャンルと凡例の共通定義", () => {
   it.each([

@@ -4,3 +4,15 @@ dist/
 .npm-cache/
 test-results/
 playwright-report/
+
+# Python (backend)
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+backend/instance/
+*.db
+*.db-*
+.env
+.env.*
+!.env.example

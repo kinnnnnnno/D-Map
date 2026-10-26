@@ -1,6 +1,7 @@
 import type { DanceEvent } from "../types/event";
+import { getTodayJst } from "../lib/calendar";
 // All venues, organizers and events below are fictional demo data.
-export const demoEvents: DanceEvent[] = [
+const originalEvents: DanceEvent[] = [
   {
     id: "1",
     title: "放課後 HIP HOP PRACTICE",
@@ -145,3 +146,42 @@ export const demoEvents: DanceEvent[] = [
     visibility: "group",
   },
 ];
+
+// 元の7公開イベントの意味を保持し、追加分は別の日に配置します。
+const additions: DanceEvent[] = ([
+  ["9", "KRUMP OPEN LAB", "KRUMP", "東京都", "新宿区西新宿", 35.69, 139.695],
+  ["10", "JAZZ MOVEMENT", "JAZZ", "東京都", "中野区中野", 35.707, 139.665],
+  ["11", "VOGUE EXCHANGE", "VOGUE", "東京都", "港区芝", 35.65, 139.75],
+  ["12", "FREESTYLE CIRCLE", "FREESTYLE", "東京都", "杉並区高円寺南", 35.704, 139.65],
+  ["13", "HOUSE STEP EXCHANGE", "HOUSE", "東京都", "武蔵野市吉祥寺本町", 35.704, 139.58],
+  ["14", "LOCK EVENING", "LOCK", "東京都", "渋谷区神南", 35.6642, 139.7003],
+  ["15", "YOKOHAMA JAZZ LAB", "JAZZ", "神奈川県", "横浜市中区桜木町", 35.451, 139.631],
+  ["16", "KAWASAKI FREESTYLE", "FREESTYLE", "神奈川県", "川崎市川崎区駅前本町", 35.531, 139.697],
+] as const).map(([id, title, genre, prefecture, area, latitude, longitude], index) => ({
+  id, title, genre, prefecture, latitude, longitude,
+  type: index % 2 ? "セッション" : "練習会",
+  startAt: "2026-11-01T15:00:00+09:00",
+  endAt: "2026-11-01T18:00:00+09:00",
+  venueName: `デモフロア ${area}`,
+  address: `${prefecture}${area}（架空の会場）`,
+  feeYen: 500 + index * 100,
+  organizerName: `架空デモ主催 ${index + 1}`,
+  participationRule: "初心者歓迎。室内シューズ・飲料を持参してください。",
+  description: "練習と交流を楽しむ架空のデモイベントです。実際の開催・募集はありません。",
+  visibility: "public",
+}));
+
+/** JSTの今日+5日と元の基準日を比較し、全イベントを同じ日数だけ未来へ移動。 */
+export function createDemoEvents(now: Date = new Date()): DanceEvent[] {
+  const reference = Date.parse("2026-10-24T00:00:00+09:00");
+  const future = Date.parse(`${getTodayJst(now)}T00:00:00+09:00`) + 5 * 86400000;
+  const shift = Math.max(0, future - reference);
+  const move = (iso: string) => new Date(Date.parse(iso) + shift + 9 * 3600000)
+    .toISOString().slice(0, 19) + "+09:00";
+  return [...originalEvents.filter(event => event.visibility === "public"), ...additions]
+    .map(event => ({ ...event, prefecture: event.prefecture ?? "東京都",
+      startAt: move(event.startAt), endAt: move(event.endAt) }));
+}
+export const demoEvents = createDemoEvents();
+// 既存の非公開データは削除せず保持。公開データの取得口には混ぜません。
+export const restrictedDemoEvents = originalEvents.filter(event => event.visibility === "group");

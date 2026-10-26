@@ -1,4 +1,6 @@
 import type { DanceEvent, SearchFilters } from "../types/event";
+import { eventPrefecture } from "../data/prefectures";
+import { ALL_GENRES } from "../types/event";
 import {
   isSelectableDate,
   parseCalendarDate,
@@ -9,8 +11,9 @@ export const emptyFilters: SearchFilters = {
   date: "",
   startTime: "",
   endTime: "",
-  genre: "",
+  genre: ALL_GENRES,
   type: "",
+  prefectures: [],
 };
 const dayMs = 86400000;
 export function searchWindow(
@@ -60,13 +63,15 @@ export function validateSearchInput(
 export function filterEvents(
   events: DanceEvent[],
   filters: SearchFilters,
+  includeAuthorizedGroups = false,
 ): DanceEvent[] {
   const window = searchWindow(filters);
   return events
     .filter(
       (event) =>
-        event.visibility === "public" &&
-        (!filters.genre || event.genre === filters.genre) &&
+        (event.visibility === "public" || (includeAuthorizedGroups && event.visibility === "group")) &&
+        (filters.prefectures.length === 0 || filters.prefectures.some(name => eventPrefecture(event) === name)) &&
+        (filters.genre === ALL_GENRES || event.genre === filters.genre) &&
         (!filters.type || event.type === filters.type) &&
         // 開始を含み、終了を含まない区間。同じ時刻に接するだけなら一致しません。
         (!window ||

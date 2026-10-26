@@ -14,6 +14,7 @@ import { SearchForm } from "../../src/components/SearchForm";
 import { emptyFilters, filterEvents } from "../../src/lib/search";
 import { denseEvents } from "./denseEvents";
 import { getPublicEvents } from "../../src/services/eventService";
+import App from "../../src/App";
 import "leaflet/dist/leaflet.css";
 import "../../src/styles.css";
 const source =
@@ -26,6 +27,7 @@ function Harness() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [detailId, setDetailId] = useState<string | null>(null);
   const [expanded, setExpanded] = useState(false);
+  const [page, setPage] = useState(1);
   const metrics = useRef<HTMLOutputElement>(null);
   const commits = useRef(0);
   const report = useRef<HTMLPreElement>(null);
@@ -155,7 +157,7 @@ function Harness() {
           today="2026-10-19"
           filters={filters}
           error=""
-          onChange={setFilters}
+          onChange={next => { setFilters(next); setPage(1); }}
         />
         <div className="discovery">
           <Profiler
@@ -180,6 +182,8 @@ function Harness() {
             />
           </Profiler>
           <EventList
+            page={page}
+            onPageChange={setPage}
             events={events}
             selectedId={selectedId}
             onSelect={select}
@@ -193,4 +197,7 @@ function Harness() {
     </main>
   );
 }
-createRoot(document.getElementById("root")!).render(<Harness />);
+const root = createRoot(document.getElementById("root")!);
+root.render(new URLSearchParams(location.search).get("dataset") === "app" ? <App /> : <Harness />);
+// 破棄時の副作用を検証する、開発用ハーネスだけの入口です。
+window.addEventListener("test:unmount", () => root.unmount(), { once: true });

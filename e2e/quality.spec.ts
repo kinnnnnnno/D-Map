@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Page } from "./fixtures/test";
 
 test.beforeEach(async ({ page }) => {
   // JSTでは10/19、LAでは10/18となる瞬間に固定し、端末日付への依存を検出します。
@@ -12,7 +12,7 @@ test.beforeEach(async ({ page }) => {
     }),
   );
   await page.route("https://fonts.googleapis.com/**", (route) => route.abort());
-  await page.goto("/");
+  await page.goto("/", { waitUntil: "domcontentloaded" });
 });
 const dateButton = (page: Page) =>
   page.getByRole("button", { name: /日付 日本時間/ });
@@ -61,6 +61,7 @@ async function expectMapCovered(page: Page) {
     .toEqual([true, true, true, true]);
 }
 async function revealIndividualMarkers(page: Page) {
+  await expect(page.locator(".map")).toHaveAttribute("data-zoom", /^\d+$/);
   // Phase 1.2では近接地点が集約されるので、個別ピンの既存検証は拡大してから行います。
   for (
     let attempt = 0;
@@ -73,8 +74,11 @@ async function revealIndividualMarkers(page: Page) {
       "data-zoom",
       previousZoom!,
     );
+    await expect.poll(() => page.locator(".map").evaluate(element => element.classList.contains("leaflet-zoom-anim"))).toBe(false);
   }
   await expect(page.locator(".cluster-pin")).toHaveCount(0);
+  // 近接イベントの追加により高倍率まで拡大するため、焦点を当てて対象ピンへパンします。
+  await page.getByRole("button", { name: /同じ場所のイベント：/ }).focus();
 }
 
 test("UI-001 JSTの過去日を無効化し、今日・明日・月末・翌年をカレンダーで選べる", async ({
@@ -152,7 +156,7 @@ test("UI-001 15分選択・日付単独・時間片側・深夜検索が即時�
   await page.getByRole("button", { name: "日付をクリア" }).click();
   await expect(page.getByRole("alert")).toContainText("日付");
   await page.getByRole("button", { name: "条件をリセット" }).click();
-  await expect(page.locator(".event-card")).toHaveCount(7);
+  await expect(page.locator(".event-card")).toHaveCount(10);
 });
 test("UI-001 カレンダーを矢印・Enter・Escapeで操作できる", async ({ page }) => {
   await dateButton(page).click();
@@ -191,7 +195,7 @@ test("UI-002 凡例とピンの色・文字が一致し番号がない", async (
       ),
     );
   }
-  await expect(page.locator(".event-pin")).toHaveCount(6);
+  await expect(page.locator(".event-pin")).toHaveCount(12);
   expect(
     (await page.locator(".event-pin b").allTextContents()).every(
       (text) => !/[0-9]/.test(text),
@@ -247,6 +251,9 @@ test("UI-003 拡大中に検索し、条件・選択・描画領域を維持し�
   const marker = page.locator(".event-pin.is-selected");
   await expect(marker).toHaveCount(1);
   await expectMapCovered(page);
+  // 選択時のポップアップ補正パンが終わってから、拡大前の基準位置を測る。
+  // タイルが揃っていてもパンの途中の場合がある。比較の許容値は変更しない。
+  await expect(page.locator(".map .leaflet-pan-anim")).toHaveCount(0);
   const before = await marker.evaluate((element) => {
     const pin = element.getBoundingClientRect(),
       map = element.closest(".map")!.getBoundingClientRect();

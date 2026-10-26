@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { demoEvents } from "../data/events";
+import { legacyEvents as demoEvents } from "../data/legacyEvents.test-fixture";
 import { getPublicEvents } from "../services/eventService";
 import { emptyFilters, filterEvents, searchWindow } from "./search";
 import type { SearchFilters } from "../types/event";
@@ -20,7 +20,7 @@ describe("日付・時刻の形式検証", () => {
 });
 describe("公開境界", () => {
   it("取得口でgroupを除外する", () => {
-    expect(getPublicEvents()).toHaveLength(7);
+    expect(getPublicEvents()).toHaveLength(15);
     expect(getPublicEvents().every((e) => e.visibility === "public")).toBe(
       true,
     );

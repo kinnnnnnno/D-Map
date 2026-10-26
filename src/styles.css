@@ -17,6 +17,33 @@
 body {
   margin: 0;
 }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.region-selector {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  /* 装飾用.map-labelのpointer-events:noneを、操作部品だけで解除する。 */
+  pointer-events: auto;
+}
+.region-trigger { display: flex; align-items: center; gap: 8px; min-height: 44px; max-width: 240px; border: 1px solid var(--line); border-radius: 6px; background: #fffefb; color: var(--green); padding: 6px 10px; font-size: 12px; text-align: left; }
+.region-trigger > span:first-child { overflow-wrap: anywhere; }
+.prefecture-dialog { width: min(440px, calc(100% - 24px)); max-height: calc(100dvh - 32px); padding: 20px; border: 1px solid var(--line); border-radius: 12px; background: #fffefb; color: #242a26; overflow-y: auto; overscroll-behavior: contain; letter-spacing: normal; }
+.prefecture-dialog::backdrop { background: #14291d88; }
+.prefecture-panel-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.prefecture-panel-header h2 { font-size: 19px; margin: 0; }
+.prefecture-dialog > input { width: 100%; margin-top: 5px; }
+.prefecture-options { border: 0; margin: 0; padding: 0; max-height: min(40dvh, 320px); overflow-y: auto; overscroll-behavior: contain; display: grid; grid-template-columns: 1fr 1fr; }
+.prefecture-option { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 6px; font-size: 13px; cursor: pointer; }
+.prefecture-option input { width: 20px; height: 20px; margin: 0; padding: 0; flex-shrink: 0; accent-color: var(--green); }
+.prefecture-panel-footer { border-top: 1px solid var(--line); margin-top: 12px; padding-top: 10px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.prefecture-panel-footer p { width: 100%; margin: 0; font-size: 12px; overflow-wrap: anywhere; }
+.prefecture-panel-footer button { min-height: 44px; }
+.map-header .region-selector select { width: auto; max-width: 130px; min-height: 44px; margin: 0; padding: 6px 24px 6px 6px; font-size: 12px; }
+.pagination { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 16px; }
+.pagination button { border: 1px solid var(--line); border-radius: 8px; background: white; color: var(--green); min-width: 72px; min-height: 44px; }
+.pagination button:disabled { opacity: .45; cursor: default; }
+.page-range { text-align: center; font-size: 12px; color: var(--muted); }
+#results-title { scroll-margin-top: 20px; }
 button,
 input,
 select {
@@ -573,6 +600,8 @@ footer small {
   margin-left: auto;
 }
 .detail-dialog {
+  overflow-y: auto;
+  overscroll-behavior: contain;
   border: 1px solid var(--line);
   border-radius: 14px;
   padding: 28px;
@@ -1403,3 +1432,42 @@ footer small {
     padding: 16px 20px;
   }
 }
+
+/* Phase 3: 既存の緑・生成りの配色を共有する操作画面 */
+.account-launch { border:1px solid var(--green); border-radius:6px; padding:8px 12px; background:#fffefa; color:var(--green); min-height:44px; }
+.account-dialog { width:min(640px,calc(100% - 24px)); max-height:85dvh; overflow-y:auto; overscroll-behavior:contain; border:1px solid var(--line); border-radius:12px; padding:20px; color:#242a26; background:#fffefa; }
+.account-dialog::backdrop { background:#14291daa; }
+.account-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.account-heading h2 { font-size:20px; }
+.account-tabs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+.account-tabs button,.account-form button,.account-dialog li button { min-height:44px; margin:4px; border:1px solid var(--line); border-radius:6px; padding:8px 12px; }
+.account-tabs [aria-pressed=true] { background:var(--green); color:white; }
+.account-form { display:grid; gap:14px; }
+.account-form label { display:grid; gap:5px; font-size:14px; }
+.account-form input,.account-form select,.account-form textarea { width:100%; min-height:44px; font-size:16px; padding:8px; border:1px solid var(--line); border-radius:6px; background:white; }
+.account-form .check-label,.checkbox-grid label { display:flex; align-items:center; gap:8px; min-height:44px; }
+.account-form input[type=checkbox] { width:20px; min-height:20px; height:20px; flex-shrink:0; }
+.checkbox-grid { display:grid; grid-template-columns:1fr 1fr; }
+.account-dialog [role=alert] { color:#9e281c; }
+.account-dialog output { overflow-wrap:anywhere; }
+.account-dialog a { overflow-wrap:anywhere; }
+.account-dialog li { margin-block:10px; }
+@media(max-width:680px) { .site-header { flex-wrap:wrap; height:auto; min-height:96px; padding-block:12px; gap:8px; } .account-launch { margin-left:auto; font-size:12px; } }
+.participation-panel,.statistics-panel { border-top:1px solid var(--line); padding-top:16px; margin-top:20px; }
+.statistics-bars { list-style:none; padding:0; }
+.statistics-bars li { margin:12px 0; }
+.statistics-bars meter { display:block; width:100%; height:24px; accent-color:var(--green); }
+
+/* 登録用地図は、検索画面の地図とは別のインスタンスで管理する。 */
+.location-picker { min-width: 0; border: 1px solid #b8c6cb; border-radius: 12px; padding: 12px; display: grid; gap: 10px; }
+.location-picker p { font-size: .85rem; overflow-wrap: anywhere; margin: 0; }
+.location-map { height: 280px; width: 100%; border-radius: 8px; z-index: 0; }
+.location-pin { color: #c94414; font-size: 30px; text-align: center; line-height: 32px; text-shadow: 0 0 3px white, 0 0 3px white; }
+.place-results { max-height: 180px; overflow: auto; padding-left: 20px; margin: 0; }
+.place-results button { text-align: left; overflow-wrap: anywhere; width: 100%; }
+.location-adjust { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
+
+.location-pin, .venue-pin { font-size: 36px; line-height: 44px; text-align: center; filter: drop-shadow(0 1px 2px #fff); }
+.location-review { padding: 12px; border: 2px solid #275d43; border-radius: 8px; display: grid; gap: 8px; background: #f3f7ed; }
+.location-review [role="alert"] { color: #9d321a; font-weight: 700; }
+.venue-map { height: 240px; width: 100%; border-radius: 10px; z-index: 0; }
