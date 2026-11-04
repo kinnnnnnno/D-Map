@@ -7,6 +7,8 @@ test('Phase3.2 年齢層/ジャンルグラフと同意取消後の非表示',as
   test.setTimeout(180000);
   await page.route('https://tile.openstreetmap.org/**',route=>route.fulfill({contentType:'image/svg+xml',body:'<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256"/>'}));
   await page.route('https://fonts.googleapis.com/**',route=>route.abort());
+  // 統計の前提を確立する。初回の画面セッション取得と登録準備のCookie生成を競合させない。
+  expect((await page.request.get('/api/auth/session')).status()).toBe(200);
   await page.goto('/');
   const unique=`${Date.now()}-${info.project.name}`;
   expect((await send(page.request,'/auth/register',{email:`stats-owner-${unique}@example.invalid`,password:'test-password-123',dancerName:'架空統計主催'})).status()).toBe(201);

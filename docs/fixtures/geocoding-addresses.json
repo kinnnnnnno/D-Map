@@ -1,0 +1,12 @@
+[
+  {"id":"tokyo-metropolitan","name":"東京都庁","area":"都市部","prefix":"東京都新宿区西新宿","numbers":[2,8,1],"source":"https://www.metro.tokyo.lg.jp/about/kotsuannai","reference":null},
+  {"id":"edogawa","name":"江戸川区役所本庁舎","area":"都市部・住宅地周辺","prefix":"東京都江戸川区中央","numbers":[1,4,1],"source":"https://www.city.edogawa.tokyo.jp/e004/kuseijoho/opendata/map_data.html","reference":{"latitude":35.7068502,"longitude":139.8683379,"source":"https://www.city.edogawa.tokyo.jp/documents/4408/20251211_kuyakusyo.csv","kind":"自治体公開の施設代表点（入口の測量点ではない）","license":"江戸川区 地図データ CC-BY、2025-12-11更新"}},
+  {"id":"mitaka","name":"三鷹市役所","area":"郊外・住宅地周辺","prefix":"東京都三鷹市野崎","numbers":[1,1,1],"source":"https://www.city.mitaka.lg.jp/c_service/001/001624.html","reference":null},
+  {"id":"kanagawa","name":"神奈川県庁本庁舎","area":"都市部","prefix":"神奈川県横浜市中区日本大通","numbers":[1],"source":"https://www.pref.kanagawa.jp/access/index.html","reference":null},
+  {"id":"aoba","name":"青葉区役所","area":"郊外・住宅地周辺","prefix":"神奈川県横浜市青葉区市ケ尾町","numbers":[31,4],"source":"https://www.city.yokohama.lg.jp/aoba/kusei/tokei/hakusho.files/0342_20260416.pdf","reference":null},
+  {"id":"asao","name":"麻生区役所","area":"郊外・住宅地周辺","prefix":"神奈川県川崎市麻生区万福寺","numbers":[1,5,1],"source":"https://www.city.kawasaki.jp/templates/faq/asao/0000124296.html","reference":null},
+  {"id":"chiba","name":"千葉県庁中庁舎","area":"都市部","prefix":"千葉県千葉市中央区市場町","numbers":[1,1],"source":"https://www.pref.chiba.lg.jp/cate/kt/goannnai/access/index.html","reference":null},
+  {"id":"nagareyama","name":"流山市役所","area":"郊外・住宅地周辺","prefix":"千葉県流山市平和台","numbers":[1,1,1],"source":"https://www.city.nagareyama.chiba.jp/institution/1004033/index.html","reference":null},
+  {"id":"saitama","name":"埼玉県庁","area":"都市部","prefix":"埼玉県さいたま市浦和区高砂","numbers":[3,15,1],"source":"https://www.pref.saitama.lg.jp/kense/gaiyo/access.html","reference":null},
+  {"id":"wako","name":"和光市役所","area":"郊外・住宅地周辺","prefix":"埼玉県和光市広沢","numbers":[1,5],"source":"https://www.city.wako.lg.jp/shisei/city/1006196/1006197.html","reference":null}
+]

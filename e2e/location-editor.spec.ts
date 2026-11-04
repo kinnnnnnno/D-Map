@@ -1,8 +1,11 @@
 import { test, expect, type Page } from "@playwright/test";
+import { readFileSync } from "node:fs";
+const bug027: { runs: { input: string; flaskJson: { latitude: number; longitude: number }[] }[] } = JSON.parse(readFileSync("docs/fixtures/bug027-synthetic-trace.json", "utf8"));
 
 async function openEditor(page: Page, project: string) {
   await page.route("https://tile.openstreetmap.org/**", route => route.fulfill({ contentType: "image/svg+xml", body: '<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256"/>' }));
   await page.route("https://fonts.googleapis.com/**", route => route.abort());
+  expect((await page.request.get("/api/auth/session")).status()).toBe(200);
   await page.goto("/");
   const token = (await (await page.request.get("/api/auth/session")).json()).csrfToken;
   const registration = await page.request.post("/api/auth/register", { headers: { "X-CSRFToken": token }, data: { email: `location-${Date.now()}-${project}@example.invalid`, password: "test-password-123", dancerName: "場所指定の架空利用者" } });
@@ -23,7 +26,12 @@ test("UI-016 住所検索・候補のキーボード選択・調整・保存・�
   await editor.getByLabel("開催場所の住所", { exact: true }).fill("東京都渋谷区テスト1-2-3");
   expect(searches).toBe(0);
   await editor.getByRole("button", { name: "住所を検索", exact: true }).focus();
-  await editor.getByRole("button", { name: "住所を検索", exact: true }).press("Enter");
+  // CSRF取得→検索応答と、応答後の描画を別々に検証する。固定時間は待たない。
+  const [searchResponse] = await Promise.all([
+    page.waitForResponse(response => response.url().endsWith("/api/geocode") && response.request().method() === "POST"),
+    editor.getByRole("button", { name: "住所を検索", exact: true }).press("Enter"),
+  ]);
+  expect(searchResponse.status()).toBe(200);
   await expect(editor.locator(".location-map")).toHaveAttribute("data-latitude", "35.69");
   await expect(editor.getByRole("button", { name: "保存する", exact: true })).toBeDisabled();
   const result = editor.getByRole("list", { name: "開催場所の検索候補" }).getByRole("button");
@@ -178,12 +186,18 @@ test("UI-016 候補なし・通信失敗でも地図クリックと中心選択�
 test("UI-018 都道府県矛盾を警告し、住所変更で古い位置を破棄する",async({page},info)=>{
   await page.route("**/api/geocode",route=>route.fulfill({json:[{label:"神奈川県横浜市テスト1-2-3（架空）",latitude:35.45,longitude:139.64,prefecture:"神奈川県",accuracy:"unknown"}]}));
   const editor=await openEditor(page,info.project.name);
-  await editor.getByLabel("開催場所の住所",{exact:true}).fill("神奈川県横浜市テスト1-2-3");
+  await editor.getByLabel("開催場所の住所",{exact:true}).fill("東京都渋谷区テスト1-2-3");
   await editor.getByRole("button",{name:"住所を検索",exact:true}).click();
   await editor.getByRole("list",{name:"開催場所の検索候補"}).getByRole("button").click();
   await expect(editor.getByRole("alert").filter({hasText:"検索候補の所在地は神奈川県"})).toBeVisible();
   await expect(editor.getByRole("button",{name:"この位置で確定する",exact:true})).toBeDisabled();
-  await editor.getByLabel("都道府県",{exact:true}).selectOption("神奈川県");
+  await expect(editor.getByRole("combobox",{name:"都道府県",exact:true})).toHaveCount(0);
+  await editor.getByLabel("開催場所の住所",{exact:true}).fill("神奈川県横浜市テスト1-2-3");
+  await expect(editor.locator(".location-pin")).toHaveCount(0);
+  await expect(editor.getByRole("status",{name:"開催場所の都道府県"})).toContainText("神奈川県");
+  await editor.getByRole("button",{name:"住所を検索",exact:true}).click();
+  await expect(editor.getByRole("button",{name:"この位置で確定する",exact:true})).toBeDisabled();
+  await editor.getByRole("button",{name:"東へ約50m",exact:true}).click();
   await editor.getByRole("button",{name:"この位置で確定する",exact:true}).click();
   await expect(editor.getByRole("button",{name:"保存する",exact:true})).toBeEnabled();
   await editor.getByLabel("開催場所の住所",{exact:true}).fill("東京都渋谷区テスト4-5-6");
@@ -221,5 +235,117 @@ test("UI-018 検索中の住所変更後に古い候補を採用しない",async
   await expect(editor.getByRole("button",{name:"住所を検索",exact:true})).toBeEnabled();
   await expect(editor.getByRole("list",{name:"開催場所の検索候補"})).toHaveCount(0);
   await expect(editor.locator(".location-pin")).toHaveCount(0);
+  await expect(editor.getByRole("button",{name:"保存する",exact:true})).toBeDisabled();
+});
+
+test("BUG-024 日本式住所・町丁目候補の警告と建物分類を表示する", async ({page}, info) => {
+  const editor = await openEditor(page, info.project.name);
+  let searches = 0;
+  await page.route("**/api/geocode", async route => {
+    searches++;
+    expect(route.request().postDataJSON()).toEqual({query:"東京都渋谷区テスト１－２－３"});
+    await route.fulfill({json:[
+      {label:"東京都の架空町丁目",prefecture:"東京都",latitude:35.69,longitude:139.7,accuracy:"town",townFallback:true},
+      {label:"東京都の架空建物1-2-3",prefecture:"東京都",latitude:35.68,longitude:139.71,accuracy:"building"}
+    ]});
+  });
+  await editor.getByLabel("開催場所の住所",{exact:true}).fill("東京都渋谷区テスト１－２－３");
+  expect(searches).toBe(0);
+  await editor.getByRole("button",{name:"住所を検索",exact:true}).click();
+  const candidates=editor.getByRole("list",{name:"開催場所の検索候補"});
+  await expect(candidates).toContainText("街区・町丁目レベル");
+  await expect(candidates).toContainText("番地・建物レベル");
+  await candidates.getByRole("button").first().click();
+  const review=editor.getByRole("region",{name:"選択地点の確認"});
+  await expect(review).toContainText("この検索結果は町丁目付近の位置です");
+  await expect(editor.locator(".location-map")).toHaveAttribute("data-latitude","35.69");
+  await expect(editor.getByRole("button",{name:"保存する",exact:true})).toBeDisabled();
+  await expect(editor.getByRole("button",{name:"この位置で確定する",exact:true})).toBeDisabled();
+  await candidates.getByRole("button").nth(1).focus();
+  await candidates.getByRole("button").nth(1).press("Enter");
+  await expect(review).toContainText("番地・建物レベル");
+  await expect(review).toContainText("正確な位置を保証しません");
+  await expect(editor.locator(".location-map")).toHaveAttribute("data-longitude","139.71");
+  await editor.getByRole("button",{name:"この位置で確定する",exact:true}).click();
+  await editor.getByRole("button",{name:"東へ約50m",exact:true}).click();
+  await expect(review).toContainText("精度不明");
+  await expect(editor.getByRole("button",{name:"保存する",exact:true})).toBeDisabled();
+  await editor.getByLabel("開催場所の住所",{exact:true}).fill("東京都渋谷区テスト4-5-6");
+  await expect(editor.locator(".location-pin")).toHaveCount(0);
+});
+
+test("BUG-027 架空JSONで全角・半角ともLeaflet座標が一致し、町丁目候補は直接確定できない", async ({page}, info) => {
+  // 公開用の完全な架空応答。実測値の匿名化コピーや外部APIの精度検証ではない。
+  const editor = await openEditor(page, info.project.name);
+  for (const run of bug027.runs) {
+    await page.route("**/api/geocode", async route => {
+      expect(route.request().postDataJSON()).toEqual({ query: run.input });
+      await route.fulfill({ json: run.flaskJson });
+    });
+    await editor.getByLabel("開催場所の住所", {exact:true}).fill(run.input);
+    const [searchResponse] = await Promise.all([
+      page.waitForResponse(response => response.url().endsWith("/api/geocode") && response.request().method() === "POST"),
+      editor.getByRole("button", {name:"住所を検索",exact:true}).click(),
+    ]);
+    expect(searchResponse.status()).toBe(200);
+    const map = editor.locator(".location-map"), candidate = run.flaskJson[0];
+    await expect(map).toHaveAttribute("data-latitude", String(candidate.latitude));
+    await expect(map).toHaveAttribute("data-longitude", String(candidate.longitude));
+    await expect(map).toHaveAttribute("data-marker-latitude", String(candidate.latitude));
+    await expect(map).toHaveAttribute("data-marker-longitude", String(candidate.longitude));
+    await expect.poll(() => map.evaluate(element => {
+      const rect = element.getBoundingClientRect(), pin = element.querySelector(".location-pin")!.getBoundingClientRect();
+      return Math.abs(pin.left+22-rect.left-rect.width/2)<3 && Math.abs(pin.top+40-rect.top-rect.height/2)<3;
+    })).toBe(true);
+    await expect(editor.getByRole("alert").filter({hasText:"この候補はそのまま確定できません"})).toBeVisible();
+    await expect(editor.getByRole("button",{name:"この位置で確定する",exact:true})).toBeDisabled();
+    await editor.getByRole("button",{name:"東へ約50m",exact:true}).click();
+    await expect(map).not.toHaveAttribute("data-marker-longitude", String(candidate.longitude));
+    await expect(editor.getByRole("button",{name:"保存する",exact:true})).toBeDisabled();
+    await editor.getByRole("button",{name:"この位置で確定する",exact:true}).click();
+    await expect(editor.getByRole("button",{name:"保存する",exact:true})).toBeEnabled();
+    await page.unroute("**/api/geocode");
+  }
+});
+
+test("UI-025 判定不能の補完・手動ピンと推定住所の矛盾・住所変更を扱う",async({page},info)=>{
+  const editor=await openEditor(page,info.project.name);
+  const address=editor.getByLabel("開催場所の住所",{exact:true});
+  const confirm=editor.getByRole("button",{name:"この位置で確定する",exact:true});
+  await expect(editor.locator('select[name="prefecture"]')).toHaveCount(0);
+  await address.fill("施設向かいの架空広場");
+  await editor.locator(".location-map").focus();await editor.locator(".location-map").press("Enter");
+  await expect(confirm).toBeDisabled();
+  const supplement=editor.getByLabel("都道府県を補完（判定できない場合）",{exact:true});
+  await supplement.fill("東京");await expect(confirm).toBeDisabled();
+  await supplement.fill("東京都");await expect(confirm).toBeEnabled();
+  await page.route("**/api/reverse-geocode",route=>route.fulfill({json:{label:"神奈川県の架空推定住所",latitude:35,longitude:139,prefecture:"神奈川県",accuracy:"estimated"}}));
+  await editor.getByRole("button",{name:"推定住所を取得",exact:true}).click();
+  await expect(editor.getByRole("alert").filter({hasText:"手動ピンの推定住所"})).toBeVisible();
+  await expect(confirm).toBeDisabled();
+  await supplement.fill("");
+  await expect(editor.getByRole("status",{name:"開催場所の都道府県"})).toContainText("神奈川県");
+  await confirm.click();
+  await address.fill("別の架空住所");
+  await expect(editor.getByRole("status",{name:"開催場所の都道府県"})).toContainText("未判定");
+  await expect(editor.locator(".location-pin")).toHaveCount(0);
+  await expect(confirm).toBeDisabled();
+});
+
+test("UI-025 候補から県を補い、候補を切り替えても一覧を保持する",async({page},info)=>{
+  const editor=await openEditor(page,info.project.name);
+  await page.route("**/api/geocode",route=>route.fulfill({json:[
+    {label:"神奈川県の架空候補",latitude:35.45,longitude:139.64,prefecture:"神奈川県"},
+    {label:"東京都の架空候補",latitude:35.69,longitude:139.7,prefecture:"東京都"}
+  ]}));
+  await editor.getByLabel("開催場所の住所",{exact:true}).fill("架空施設の住所");
+  await editor.getByRole("button",{name:"住所を検索",exact:true}).click();
+  const options=editor.getByRole("list",{name:"開催場所の検索候補"}).getByRole("button");
+  await options.first().click();
+  await expect(editor.getByRole("status",{name:"開催場所の都道府県"})).toContainText("神奈川県");
+  await expect(options).toHaveCount(2);
+  await options.nth(1).focus();await options.nth(1).press("Enter");
+  await expect(editor.getByRole("status",{name:"開催場所の都道府県"})).toContainText("東京都");
+  await expect(editor.locator(".location-map")).toHaveAttribute("data-longitude","139.7");
   await expect(editor.getByRole("button",{name:"保存する",exact:true})).toBeDisabled();
 });

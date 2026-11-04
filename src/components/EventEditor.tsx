@@ -4,19 +4,22 @@ import { prefectures } from "../data/prefectures";
 import { api, type GroupInfo, type UserProfile } from "../services/api";
 import { Modal } from "./Modal";
 import { LocationPicker } from "./LocationPicker";
-import { canSavePlace, selectPlace, type SelectedPlace } from "../lib/location";
+import { addressPrefecture, canSavePlace, resolvePrefecture, selectPlace, type SelectedPlace } from "../lib/location";
 export function EventEditor({event,user,groups,onClose,onSaved}:{event:DanceEvent|null;user:UserProfile;groups:GroupInfo[];onClose:()=>void;onSaved:()=>void}) {
   const [busy,setBusy]=useState(false),[error,setError]=useState("");
   const [visibility,setVisibility]=useState(event?.visibility??"public");
   const [address,setAddress]=useState(event?.address??"");
   const [location,setLocation]=useState<SelectedPlace|null>(event?selectPlace(event,event.address,"existing"):null);
-  const [prefecture,setPrefecture]=useState(event?.prefecture??"東京都");
+  const [prefectureSupplement,setPrefectureSupplement]=useState(event?.prefecture??"");
+  const resolved = resolvePrefecture(address,location,prefectureSupplement);
+  const prefecture = resolved.name;
+  const needsSupplement = !addressPrefecture(address) && !location?.matchedPrefecture && (!!prefectureSupplement || !location?.estimatedPrefecture);
   const jst=(iso?:string)=>iso?new Date(Date.parse(iso)+9*3600000).toISOString().slice(0,16):"";
   async function save(e:FormEvent<HTMLFormElement>) {
     e.preventDefault(); if(busy) return; if(!canSavePlace(location,address,prefecture)){setError("住所と開催場所を確認し、この位置で確定してください。");return;} setBusy(true);setError("");
     const data=Object.fromEntries(new FormData(e.currentTarget));
     try {
-      await api(`/events${event?`/${event.id}`:""}`,event?"PUT":"POST",{...data,visibility,
+      await api(`/events${event?`/${event.id}`:""}`,event?"PUT":"POST",{...data,visibility,prefecture,
         startAt:`${data.startAt}:00+09:00`,endAt:`${data.endAt}:00+09:00`,
         latitude:location.latitude,longitude:location.longitude,feeYen:Number(data.feeYen),
         groupId:visibility==="group"?Number(event?.groupId??data.groupId):null,
@@ -31,9 +34,10 @@ export function EventEditor({event,user,groups,onClose,onSaved}:{event:DanceEven
       <label>イベントジャンル<select aria-label="イベントジャンル" name="genre" defaultValue={event?.genre}>{genres.map(genre=><option key={genre}>{genre}</option>)}</select></label>
       <label>開始日時（日本時間）<input name="startAt" type="datetime-local" required defaultValue={jst(event?.startAt)}/></label>
       <label>終了日時（日本時間）<input name="endAt" type="datetime-local" required defaultValue={jst(event?.endAt)}/></label>
-      <label>都道府県<select aria-label="都道府県" name="prefecture" value={prefecture} onChange={e=>{setPrefecture(e.target.value as typeof prefecture);setLocation(current=>current?{...current,confirmed:false}:null);}}>{prefectures.map(([name])=><option key={name}>{name}</option>)}</select></label>
       <label>施設名・会場名<input name="venueName" maxLength={120} required defaultValue={event?.venueName}/></label>
-      <label>開催場所の住所<input name="address" maxLength={250} required value={address} aria-describedby="location-privacy" onChange={e=>{setAddress(e.target.value);setLocation(null);}} onKeyDown={e=>{if(e.key==="Enter")e.preventDefault();}}/></label>
+      <label>開催場所の住所<input name="address" placeholder="東京都架空市テスト区検証町1-2-3" maxLength={250} required value={address} aria-describedby="location-privacy" onChange={e=>{setAddress(e.target.value);setLocation(null);setPrefectureSupplement("");}} onKeyDown={e=>{if(e.key==="Enter")e.preventDefault();}}/></label>
+      <p role="status" aria-label="開催場所の都道府県">都道府県：{prefecture || "未判定"} · {resolved.source}</p>
+      {needsSupplement && <><label>都道府県を補完（判定できない場合）<input list="event-prefecture-options" value={prefectureSupplement} onChange={e=>{setPrefectureSupplement(e.target.value);setLocation(current=>current?{...current,confirmed:false}:null);}}/></label><datalist id="event-prefecture-options">{prefectures.map(([name])=><option key={name} value={name}/>)}</datalist><p>正式名称を入力してください。未判定のままでは位置を確定・保存できません。</p></>}
       <LocationPicker value={location} address={address} prefecture={prefecture} onChange={setLocation}/>
       <label>参加費（円）<input name="feeYen" type="number" min={0} max={1000000} step={1} required defaultValue={event?.feeYen??0}/></label>
       <label>主催者名<input name="organizerName" maxLength={80} required defaultValue={event?.organizerName??user.dancerName}/></label>

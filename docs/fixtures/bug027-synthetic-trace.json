@@ -1,0 +1,140 @@
+{
+  "dataKind": "synthetic-regression",
+  "notice": "Fictional address, provider response and coordinates. Not an external measurement or an anonymized raw response.",
+  "measuredAt": null,
+  "externalRequests": 0,
+  "runs": [
+    {
+      "input": "神奈川県架空市テスト区検証町7-8-9",
+      "normalized": "神奈川県架空市テスト区検証町7-8-9",
+      "plannedQueries": [
+        [
+          "神奈川県架空市テスト区検証町7-8-9",
+          false
+        ],
+        [
+          "神奈川県架空市テスト区検証町7丁目8番9号",
+          false
+        ],
+        [
+          "神奈川県, 架空市テスト区検証町7丁目",
+          true
+        ]
+      ],
+      "steps": [
+        {
+          "query": "神奈川県架空市テスト区検証町7-8-9",
+          "simulatedCacheHit": false,
+          "upstream": {
+            "status": 200,
+            "rows": []
+          }
+        },
+        {
+          "query": "神奈川県架空市テスト区検証町7丁目8番9号",
+          "simulatedCacheHit": false,
+          "upstream": {
+            "status": 200,
+            "rows": []
+          }
+        },
+        {
+          "query": "神奈川県, 架空市テスト区検証町7丁目",
+          "simulatedCacheHit": false,
+          "upstream": {
+            "status": 200,
+            "rows": [
+              {
+                "lat": "35.000001",
+                "lon": "139.000002",
+                "display_name": "検証町七丁目, テスト区, 架空市, 神奈川県, 日本（架空）",
+                "addresstype": "neighbourhood",
+                "address": {
+                  "province": "神奈川県",
+                  "neighbourhood": "検証町七丁目"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "status": 200,
+      "flaskJson": [
+        {
+          "label": "検証町七丁目, テスト区, 架空市, 神奈川県, 日本（架空）",
+          "prefecture": "神奈川県",
+          "latitude": 35.000001,
+          "longitude": 139.000002,
+          "accuracy": "town",
+          "townFallback": true
+        }
+      ]
+    },
+    {
+      "input": "神奈川県架空市テスト区検証町７－８－９",
+      "normalized": "神奈川県架空市テスト区検証町7-8-9",
+      "plannedQueries": [
+        [
+          "神奈川県架空市テスト区検証町7-8-9",
+          false
+        ],
+        [
+          "神奈川県架空市テスト区検証町7丁目8番9号",
+          false
+        ],
+        [
+          "神奈川県, 架空市テスト区検証町7丁目",
+          true
+        ]
+      ],
+      "steps": [
+        {
+          "query": "神奈川県架空市テスト区検証町7-8-9",
+          "simulatedCacheHit": true,
+          "upstream": {
+            "status": 200,
+            "rows": []
+          }
+        },
+        {
+          "query": "神奈川県架空市テスト区検証町7丁目8番9号",
+          "simulatedCacheHit": true,
+          "upstream": {
+            "status": 200,
+            "rows": []
+          }
+        },
+        {
+          "query": "神奈川県, 架空市テスト区検証町7丁目",
+          "simulatedCacheHit": true,
+          "upstream": {
+            "status": 200,
+            "rows": [
+              {
+                "lat": "35.000001",
+                "lon": "139.000002",
+                "display_name": "検証町七丁目, テスト区, 架空市, 神奈川県, 日本（架空）",
+                "addresstype": "neighbourhood",
+                "address": {
+                  "province": "神奈川県",
+                  "neighbourhood": "検証町七丁目"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "status": 200,
+      "flaskJson": [
+        {
+          "label": "検証町七丁目, テスト区, 架空市, 神奈川県, 日本（架空）",
+          "prefecture": "神奈川県",
+          "latitude": 35.000001,
+          "longitude": 139.000002,
+          "accuracy": "town",
+          "townFallback": true
+        }
+      ]
+    }
+  ]
+}

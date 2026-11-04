@@ -9,9 +9,11 @@ import time
 from pathlib import Path
 from urllib.parse import urlencode, urlsplit
 from urllib.request import Request, urlopen
+from urllib.error import HTTPError
 from flask import Blueprint, current_app, jsonify, abort
 from flask_login import login_required
 from .validation import body, PREFECTURES
+from .japanese_address import search_queries, result_accuracy
 
 geocoding = Blueprint('geocoding', __name__)
 
@@ -50,9 +52,9 @@ def address_info(row):
     return dict(label=row['display_name'][:500], prefecture=prefecture)
 
 
-def provider_request(endpoint, parameters, transform):
+def provider_request(endpoint, parameters, transform, *, wait=False):
     cache_path = current_app.config.get('GEOCODING_CACHE') or str(Path(current_app.instance_path) / 'geocoding-cache.db')
-    cache_key = 'venue-v4:' + endpoint + '\n' + json.dumps(parameters, sort_keys=True, ensure_ascii=False)
+    cache_key = 'venue-v5:' + endpoint + '\n' + json.dumps(parameters, sort_keys=True, ensure_ascii=False)
     with closing(sqlite3.connect(cache_path, timeout=1)) as connection:
         connection.execute('CREATE TABLE IF NOT EXISTS cache (query TEXT PRIMARY KEY, result TEXT, expires REAL)')
         connection.execute('CREATE TABLE IF NOT EXISTS throttle (id INTEGER PRIMARY KEY, timestamp REAL)')
@@ -67,7 +69,11 @@ def provider_request(endpoint, parameters, transform):
             return json.loads(cached[0])
         last = connection.execute('SELECT timestamp FROM throttle WHERE id=1').fetchone()
         if last and now - last[0] < 1.1:
-            abort(429, description='検索は少し間隔を空けて再試行してください。地図からも指定できます。')
+            if wait:
+                # 同じボタン操作内の代替検索だけ待機。ロック中なので別ワーカーも割り込まない。
+                time.sleep(1.1 - (now - last[0]))
+            else:
+                abort(429, description='検索は少し間隔を空けて再試行してください。地図からも指定できます。')
         request = Request(endpoint + '?' + urlencode(parameters), headers={
             'User-Agent':current_app.config.get('GEOCODING_USER_AGENT') or 'd-map/1.0 (venue picker; https://github.com/kinnnnnnno/D-Map)',
             'Accept':'application/json'})
@@ -77,9 +83,11 @@ def provider_request(endpoint, parameters, transform):
             if len(raw) > 262144:
                 raise ValueError('oversized')
             result = transform(json.loads(raw))
-        except (OSError, ValueError, TypeError, KeyError):
+        except (OSError, ValueError, TypeError, KeyError) as error:
             connection.execute('INSERT OR REPLACE INTO throttle VALUES (1, ?)', (time.time(),))
             connection.commit()
+            if isinstance(error, HTTPError) and error.code == 429:
+                abort(429, description='住所検索サービスの利用制限に達しました。時間を空けるか地図から指定してください。')
             abort(502, description='住所検索に接続できません。時間を空けて再試行するか、地図から指定してください。')
         connection.execute('INSERT OR REPLACE INTO cache VALUES (?, ?, ?)', (cache_key, json.dumps(result), now + 3600))
         connection.execute('DELETE FROM cache WHERE rowid NOT IN (SELECT rowid FROM cache ORDER BY expires DESC LIMIT 200)')
@@ -97,9 +105,22 @@ def lookup(query):
             lat, lon = float(row['lat']), float(row['lon'])
             if not math.isfinite(lat) or not math.isfinite(lon) or abs(lat)>90 or abs(lon)>180:
                 raise ValueError('invalid coordinates')
-            results.append(dict(**address_info(row), latitude=lat, longitude=lon, accuracy='unknown'))
+            results.append(dict(**address_info(row), latitude=lat, longitude=lon, accuracy=result_accuracy(row)))
         return results
-    return provider_request(endpoint_for('GEOCODING_URL'), dict(q=query,format='jsonv2',addressdetails=1,limit=5,countrycodes='jp',**{'accept-language':'ja'}), transform)
+    endpoint = endpoint_for('GEOCODING_URL')
+    if len(search_queries(query)[0][0]) < 2:
+        abort(400, description='郵便番号だけでなく開催場所の住所を入力してください。')
+    for index, (variant, fallback) in enumerate(search_queries(query)):
+        results = provider_request(endpoint, dict(q=variant,format='jsonv2',addressdetails=1,limit=5,countrycodes='jp',**{'accept-language':'ja'}), transform, wait=index > 0)
+        if results:
+            if fallback:
+                # 番地を落とした検索を建物レベルとして返さない。
+                for result in results:
+                    if result['accuracy'] == 'building':
+                        result['accuracy'] = 'unknown'
+                    result['townFallback'] = True
+            return results
+    return []
 
 
 def reverse_lookup(latitude, longitude):

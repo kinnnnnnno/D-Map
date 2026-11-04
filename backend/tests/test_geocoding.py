@@ -146,3 +146,73 @@ import pytest
 def test_provider_prefecture_names_are_normalized(details,expected):
     from app.geocoding import address_info
     assert address_info({'display_name':'公開住所','address':details})['prefecture']==expected
+
+
+@pytest.mark.parametrize('kind', ['quarter', 'house', None])
+def test_japanese_search_fallback_is_bounded_spaced_and_cached(app, client, tmp_path, monkeypatch, kind):
+    from urllib.parse import parse_qs, urlsplit
+    configure(app, tmp_path); register(client)
+    clock = [1000.0]
+    calls = []
+    waits = []
+    def sleep(seconds):
+        waits.append(seconds); clock[0] += seconds
+    monkeypatch.setattr('app.geocoding.time', SimpleNamespace(time=lambda:clock[0], sleep=sleep))
+    def fetch(request, timeout):
+        calls.append((clock[0], parse_qs(urlsplit(request.full_url).query)['q'][0]))
+        rows = [] if len(calls) < 3 or kind is None else [dict(lat='35.69',lon='139.7',display_name='東京都の架空町丁目',addresstype=kind,address={'state':'東京都','house_number':'1-2-3'})]
+        return io.BytesIO(json.dumps(rows).encode())
+    monkeypatch.setattr('app.geocoding.urlopen', fetch)
+    response = send(client, '/api/geocode', {'query':'東京都テスト１－２－３'})
+    assert response.status_code == 200
+    if kind is None:
+        assert response.get_json() == []
+    else:
+        assert response.get_json()[0]['accuracy'] == ('town' if kind == 'quarter' else 'unknown')
+        assert response.get_json()[0]['townFallback'] is True
+    assert [q for _,q in calls] == ['東京都テスト1-2-3','東京都テスト1丁目2番3号','東京都, テスト1丁目']
+    assert len(waits) == 2 and all(wait >= 1.09 for wait in waits)
+    assert send(client, '/api/geocode', {'query':'東京都テスト1丁目2番3号'}).status_code == 200
+    assert len(calls) == 3  # 同値の住所は正規化されたキーでキャッシュを共有する。
+
+
+@pytest.mark.parametrize('error,status', [(TimeoutError('timeout'),502), (HTTPError('https://example.invalid',429,'limit',{},None),429)])
+def test_fallback_never_retries_upstream_errors(app,client,tmp_path,monkeypatch,error,status):
+    configure(app,tmp_path); register(client)
+    calls=[]
+    def fail(*args,**kwargs):
+        calls.append(1); raise error
+    monkeypatch.setattr('app.geocoding.urlopen',fail)
+    assert send(client,'/api/geocode',{'query':'東京都テスト1-2-3'}).status_code == status
+    assert len(calls) == 1
+
+
+def test_building_metadata_and_postcode_only_validation(app,client,tmp_path,monkeypatch):
+    configure(app,tmp_path); register(client)
+    assert send(client,'/api/geocode',{'query':'〒123-4567'}).status_code == 400
+    monkeypatch.setattr('app.geocoding.urlopen',lambda *a,**k:io.BytesIO(json.dumps([dict(lat='35',lon='139',display_name='架空番地',addresstype='house',address={'house_number':'1-2-3','state':'東京都'})]).encode()))
+    rows=send(client,'/api/geocode',{'query':'東京都テスト1-2-3'}).get_json()
+    assert rows[0]['accuracy'] == 'building'
+
+
+def test_bug027_synthetic_response_preserves_coordinates_and_cache(app, client, tmp_path, monkeypatch):
+    """住所・座標・応答は架空。実測の再現や外部検索精度の検証ではない。"""
+    from pathlib import Path
+    from urllib.parse import parse_qs, urlsplit
+    trace = json.loads((Path(__file__).resolve().parents[2]/'docs/fixtures/bug027-synthetic-trace.json').read_text(encoding='utf-8'))
+    assert trace['dataKind'] == 'synthetic-regression' and trace['externalRequests'] == 0
+    configure(app, tmp_path); register(client)
+    clock = [1000.0]
+    monkeypatch.setattr('app.geocoding.time', SimpleNamespace(time=lambda:clock[0], sleep=lambda seconds:clock.__setitem__(0,clock[0]+seconds)))
+    calls = []
+    by_query = {step['query']:step['upstream']['rows'] for step in trace['runs'][0]['steps']}
+    def fetch(request, timeout):
+        query = parse_qs(urlsplit(request.full_url).query)['q'][0]
+        calls.append(query)
+        return io.BytesIO(json.dumps(by_query[query]).encode())
+    monkeypatch.setattr('app.geocoding.urlopen', fetch)
+    for run in trace['runs']:
+        response = send(client, '/api/geocode', {'query':run['input']})
+        assert response.status_code == 200
+        assert response.get_json() == run['flaskJson']
+    assert calls == list(by_query)  # 全角の再検索では追加通信なし。

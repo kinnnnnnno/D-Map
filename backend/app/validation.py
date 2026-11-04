@@ -1,9 +1,17 @@
 from datetime import datetime, timezone, date, timedelta
 import math
 import re
+import unicodedata
 from flask import request, abort
 GENRES = ['HIP HOP','HOUSE','BREAKING','LOCK','POP','WAACK','ALL STYLE','KRUMP','JAZZ','VOGUE','FREESTYLE']
 PREFECTURES = '北海道 青森県 岩手県 宮城県 秋田県 山形県 福島県 茨城県 栃木県 群馬県 埼玉県 千葉県 東京都 神奈川県 新潟県 富山県 石川県 福井県 山梨県 長野県 岐阜県 静岡県 愛知県 三重県 滋賀県 京都府 大阪府 兵庫県 奈良県 和歌山県 鳥取県 島根県 岡山県 広島県 山口県 徳島県 香川県 愛媛県 高知県 福岡県 佐賀県 長崎県 熊本県 大分県 宮崎県 鹿児島県 沖縄県'.split()
+
+
+def address_prefecture(address):
+    # 保存文字列は変更せず、先頭の郵便番号を除いて正式名称だけ認識する。
+    normalized = unicodedata.normalize('NFKC', address).strip()
+    normalized = re.sub(r'^〒?\s*\d{3}-?\d{4}\s*', '', normalized)
+    return next((name for name in PREFECTURES if normalized.startswith(name)), None)
 
 
 def body():
@@ -71,6 +79,9 @@ def event_fields(data):
         if value not in options:
             abort(400, description=f'{key}が不正です。')
         fields[key]=value
+    inferred = address_prefecture(fields['address'])
+    if inferred and inferred != fields['prefecture']:
+        abort(400, description='住所と都道府県が一致しません。開催場所を確認してください。')
     for key in ['startAt','endAt']:
         try:
             value=datetime.fromisoformat(data[key])

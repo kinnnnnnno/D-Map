@@ -23,7 +23,11 @@ test("Phase3.0 登録・プロフィール編集・ログアウト・ログイ�
   await page.getByLabel("ダンサーネーム",{exact:true}).fill("変更した架空名");
   await page.getByLabel("生年（任意）",{exact:true}).fill("2000");
   await page.getByLabel("年齢統計への参加に同意する",{exact:false}).check();
-  await page.getByRole("button",{name:"プロフィールを保存",exact:true}).click();
+  const [profileSave] = await Promise.all([
+    page.waitForResponse(response=>response.url().endsWith("/api/profile")&&response.request().method()==="PUT"),
+    page.getByRole("button",{name:"プロフィールを保存",exact:true}).click(),
+  ]);
+  expect(profileSave.status()).toBe(200);
   await expect(page.getByText("プロフィールを保存しました。",{exact:true})).toBeVisible();
   await page.getByRole("button",{name:"ログアウト",exact:true}).click();
   await page.getByLabel("メールアドレス",{exact:true}).fill(email);

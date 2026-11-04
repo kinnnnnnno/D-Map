@@ -1,0 +1,1626 @@
+{
+  "at": "2026-10-26T13:00:10.988Z",
+  "method": "公開データ実取得＋ローカル正規化。検索APIの実測とは区別。",
+  "attribution": {
+    "creator": "株式会社Geolonia",
+    "title": "Geolonia住所データv2（原典：デジタル庁アドレス・ベース・レジストリ）",
+    "source": "https://github.com/geolonia/japanese-addresses-v2",
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "modification": "d-map開発作業で公開施設の結果を抽出・正規化・比較・距離計算したもの。原典の未加工データではない。"
+  },
+  "acquisitionRuns": [
+    {
+      "at": "2026-10-26T12:45:24.458Z",
+      "network": [
+        {
+          "path": "/api/ja.json",
+          "range": "",
+          "status": 200,
+          "bytes": 314034,
+          "elapsedMs": 302
+        },
+        {
+          "path": "/api/ja/%E6%9D%B1%E4%BA%AC%E9%83%BD/%E6%96%B0%E5%AE%BF%E5%8C%BA.json",
+          "range": "",
+          "status": 200,
+          "bytes": 37967,
+          "elapsedMs": 62
+        },
+        {
+          "path": "/api/ja/%E6%9D%B1%E4%BA%AC%E9%83%BD/%E6%B1%9F%E6%88%B8%E5%B7%9D%E5%8C%BA.json",
+          "range": "",
+          "status": 200,
+          "bytes": 58251,
+          "elapsedMs": 38
+        },
+        {
+          "path": "/api/ja/%E6%9D%B1%E4%BA%AC%E9%83%BD/%E6%B1%9F%E6%88%B8%E5%B7%9D%E5%8C%BA-%E4%BD%8F%E5%B1%85%E8%A1%A8%E7%A4%BA.txt",
+          "range": "bytes=776254-797086",
+          "status": 206,
+          "bytes": 20833,
+          "elapsedMs": 95
+        },
+        {
+          "path": "/api/ja/%E6%9D%B1%E4%BA%AC%E9%83%BD/%E4%B8%89%E9%B7%B9%E5%B8%82.json",
+          "range": "",
+          "status": 200,
+          "bytes": 17353,
+          "elapsedMs": 74
+        },
+        {
+          "path": "/api/ja/%E6%9D%B1%E4%BA%AC%E9%83%BD/%E4%B8%89%E9%B7%B9%E5%B8%82-%E4%BD%8F%E5%B1%85%E8%A1%A8%E7%A4%BA.txt",
+          "range": "bytes=805780-820711",
+          "status": 206,
+          "bytes": 14932,
+          "elapsedMs": 47
+        },
+        {
+          "path": "/api/ja/%E7%A5%9E%E5%A5%88%E5%B7%9D%E7%9C%8C/%E6%A8%AA%E6%B5%9C%E5%B8%82%E4%B8%AD%E5%8C%BA.json",
+          "range": "",
+          "status": 200,
+          "bytes": 43093,
+          "elapsedMs": 31
+        },
+        {
+          "path": "/api/ja/%E7%A5%9E%E5%A5%88%E5%B7%9D%E7%9C%8C/%E6%A8%AA%E6%B5%9C%E5%B8%82%E9%9D%92%E8%91%89%E5%8C%BA.json",
+          "range": "",
+          "status": 200,
+          "bytes": 18321,
+          "elapsedMs": 34
+        },
+        {
+          "path": "/api/ja/%E7%A5%9E%E5%A5%88%E5%B7%9D%E7%9C%8C/%E6%A8%AA%E6%B5%9C%E5%B8%82%E9%9D%92%E8%91%89%E5%8C%BA-%E5%9C%B0%E7%95%AA.txt",
+          "range": "bytes=1899089-2028585",
+          "status": 206,
+          "bytes": 129497,
+          "elapsedMs": 70
+        },
+        {
+          "path": "/api/ja/%E7%A5%9E%E5%A5%88%E5%B7%9D%E7%9C%8C/%E5%B7%9D%E5%B4%8E%E5%B8%82%E9%BA%BB%E7%94%9F%E5%8C%BA.json",
+          "range": "",
+          "status": 200,
+          "bytes": 32656,
+          "elapsedMs": 33
+        },
+        {
+          "path": "/api/ja/%E7%A5%9E%E5%A5%88%E5%B7%9D%E7%9C%8C/%E5%B7%9D%E5%B4%8E%E5%B8%82%E9%BA%BB%E7%94%9F%E5%8C%BA-%E4%BD%8F%E5%B1%85%E8%A1%A8%E7%A4%BA.txt",
+          "range": "bytes=837931-845997",
+          "status": 206,
+          "bytes": 8067,
+          "elapsedMs": 26
+        },
+        {
+          "path": "/api/ja/%E5%8D%83%E8%91%89%E7%9C%8C/%E5%8D%83%E8%91%89%E5%B8%82%E4%B8%AD%E5%A4%AE%E5%8C%BA.json",
+          "range": "",
+          "status": 200,
+          "bytes": 36402,
+          "elapsedMs": 45
+        },
+        {
+          "path": "/api/ja/%E5%8D%83%E8%91%89%E7%9C%8C/%E5%8D%83%E8%91%89%E5%B8%82%E4%B8%AD%E5%A4%AE%E5%8C%BA-%E4%BD%8F%E5%B1%85%E8%A1%A8%E7%A4%BA.txt",
+          "range": "bytes=50943-55858",
+          "status": 206,
+          "bytes": 4916,
+          "elapsedMs": 28
+        },
+        {
+          "path": "/api/ja/%E5%8D%83%E8%91%89%E7%9C%8C/%E6%B5%81%E5%B1%B1%E5%B8%82.json",
+          "range": "",
+          "status": 200,
+          "bytes": 32516,
+          "elapsedMs": 31
+        },
+        {
+          "path": "/api/ja/%E5%8D%83%E8%91%89%E7%9C%8C/%E6%B5%81%E5%B1%B1%E5%B8%82-%E5%9C%B0%E7%95%AA.txt",
+          "range": "bytes=780314-782592",
+          "status": 206,
+          "bytes": 2279,
+          "elapsedMs": 37
+        },
+        {
+          "path": "/api/ja/%E5%9F%BC%E7%8E%89%E7%9C%8C/%E3%81%95%E3%81%84%E3%81%9F%E3%81%BE%E5%B8%82%E6%B5%A6%E5%92%8C%E5%8C%BA.json",
+          "range": "",
+          "status": 200,
+          "bytes": 23789,
+          "elapsedMs": 37
+        },
+        {
+          "path": "/api/ja/%E5%9F%BC%E7%8E%89%E7%9C%8C/%E3%81%95%E3%81%84%E3%81%9F%E3%81%BE%E5%B8%82%E6%B5%A6%E5%92%8C%E5%8C%BA-%E4%BD%8F%E5%B1%85%E8%A1%A8%E7%A4%BA.txt",
+          "range": "bytes=329588-343569",
+          "status": 206,
+          "bytes": 13982,
+          "elapsedMs": 27
+        },
+        {
+          "path": "/api/ja/%E5%9F%BC%E7%8E%89%E7%9C%8C/%E5%92%8C%E5%85%89%E5%B8%82.json",
+          "range": "",
+          "status": 200,
+          "bytes": 8096,
+          "elapsedMs": 34
+        }
+      ]
+    },
+    {
+      "at": "2026-10-26T13:00:10.988Z",
+      "network": []
+    }
+  ],
+  "network": [
+    {
+      "path": "/api/ja.json",
+      "range": "",
+      "status": 200,
+      "bytes": 314034,
+      "elapsedMs": 302
+    },
+    {
+      "path": "/api/ja/%E6%9D%B1%E4%BA%AC%E9%83%BD/%E6%96%B0%E5%AE%BF%E5%8C%BA.json",
+      "range": "",
+      "status": 200,
+      "bytes": 37967,
+      "elapsedMs": 62
+    },
+    {
+      "path": "/api/ja/%E6%9D%B1%E4%BA%AC%E9%83%BD/%E6%B1%9F%E6%88%B8%E5%B7%9D%E5%8C%BA.json",
+      "range": "",
+      "status": 200,
+      "bytes": 58251,
+      "elapsedMs": 38
+    },
+    {
+      "path": "/api/ja/%E6%9D%B1%E4%BA%AC%E9%83%BD/%E6%B1%9F%E6%88%B8%E5%B7%9D%E5%8C%BA-%E4%BD%8F%E5%B1%85%E8%A1%A8%E7%A4%BA.txt",
+      "range": "bytes=776254-797086",
+      "status": 206,
+      "bytes": 20833,
+      "elapsedMs": 95
+    },
+    {
+      "path": "/api/ja/%E6%9D%B1%E4%BA%AC%E9%83%BD/%E4%B8%89%E9%B7%B9%E5%B8%82.json",
+      "range": "",
+      "status": 200,
+      "bytes": 17353,
+      "elapsedMs": 74
+    },
+    {
+      "path": "/api/ja/%E6%9D%B1%E4%BA%AC%E9%83%BD/%E4%B8%89%E9%B7%B9%E5%B8%82-%E4%BD%8F%E5%B1%85%E8%A1%A8%E7%A4%BA.txt",
+      "range": "bytes=805780-820711",
+      "status": 206,
+      "bytes": 14932,
+      "elapsedMs": 47
+    },
+    {
+      "path": "/api/ja/%E7%A5%9E%E5%A5%88%E5%B7%9D%E7%9C%8C/%E6%A8%AA%E6%B5%9C%E5%B8%82%E4%B8%AD%E5%8C%BA.json",
+      "range": "",
+      "status": 200,
+      "bytes": 43093,
+      "elapsedMs": 31
+    },
+    {
+      "path": "/api/ja/%E7%A5%9E%E5%A5%88%E5%B7%9D%E7%9C%8C/%E6%A8%AA%E6%B5%9C%E5%B8%82%E9%9D%92%E8%91%89%E5%8C%BA.json",
+      "range": "",
+      "status": 200,
+      "bytes": 18321,
+      "elapsedMs": 34
+    },
+    {
+      "path": "/api/ja/%E7%A5%9E%E5%A5%88%E5%B7%9D%E7%9C%8C/%E6%A8%AA%E6%B5%9C%E5%B8%82%E9%9D%92%E8%91%89%E5%8C%BA-%E5%9C%B0%E7%95%AA.txt",
+      "range": "bytes=1899089-2028585",
+      "status": 206,
+      "bytes": 129497,
+      "elapsedMs": 70
+    },
+    {
+      "path": "/api/ja/%E7%A5%9E%E5%A5%88%E5%B7%9D%E7%9C%8C/%E5%B7%9D%E5%B4%8E%E5%B8%82%E9%BA%BB%E7%94%9F%E5%8C%BA.json",
+      "range": "",
+      "status": 200,
+      "bytes": 32656,
+      "elapsedMs": 33
+    },
+    {
+      "path": "/api/ja/%E7%A5%9E%E5%A5%88%E5%B7%9D%E7%9C%8C/%E5%B7%9D%E5%B4%8E%E5%B8%82%E9%BA%BB%E7%94%9F%E5%8C%BA-%E4%BD%8F%E5%B1%85%E8%A1%A8%E7%A4%BA.txt",
+      "range": "bytes=837931-845997",
+      "status": 206,
+      "bytes": 8067,
+      "elapsedMs": 26
+    },
+    {
+      "path": "/api/ja/%E5%8D%83%E8%91%89%E7%9C%8C/%E5%8D%83%E8%91%89%E5%B8%82%E4%B8%AD%E5%A4%AE%E5%8C%BA.json",
+      "range": "",
+      "status": 200,
+      "bytes": 36402,
+      "elapsedMs": 45
+    },
+    {
+      "path": "/api/ja/%E5%8D%83%E8%91%89%E7%9C%8C/%E5%8D%83%E8%91%89%E5%B8%82%E4%B8%AD%E5%A4%AE%E5%8C%BA-%E4%BD%8F%E5%B1%85%E8%A1%A8%E7%A4%BA.txt",
+      "range": "bytes=50943-55858",
+      "status": 206,
+      "bytes": 4916,
+      "elapsedMs": 28
+    },
+    {
+      "path": "/api/ja/%E5%8D%83%E8%91%89%E7%9C%8C/%E6%B5%81%E5%B1%B1%E5%B8%82.json",
+      "range": "",
+      "status": 200,
+      "bytes": 32516,
+      "elapsedMs": 31
+    },
+    {
+      "path": "/api/ja/%E5%8D%83%E8%91%89%E7%9C%8C/%E6%B5%81%E5%B1%B1%E5%B8%82-%E5%9C%B0%E7%95%AA.txt",
+      "range": "bytes=780314-782592",
+      "status": 206,
+      "bytes": 2279,
+      "elapsedMs": 37
+    },
+    {
+      "path": "/api/ja/%E5%9F%BC%E7%8E%89%E7%9C%8C/%E3%81%95%E3%81%84%E3%81%9F%E3%81%BE%E5%B8%82%E6%B5%A6%E5%92%8C%E5%8C%BA.json",
+      "range": "",
+      "status": 200,
+      "bytes": 23789,
+      "elapsedMs": 37
+    },
+    {
+      "path": "/api/ja/%E5%9F%BC%E7%8E%89%E7%9C%8C/%E3%81%95%E3%81%84%E3%81%9F%E3%81%BE%E5%B8%82%E6%B5%A6%E5%92%8C%E5%8C%BA-%E4%BD%8F%E5%B1%85%E8%A1%A8%E7%A4%BA.txt",
+      "range": "bytes=329588-343569",
+      "status": 206,
+      "bytes": 13982,
+      "elapsedMs": 27
+    },
+    {
+      "path": "/api/ja/%E5%9F%BC%E7%8E%89%E7%9C%8C/%E5%92%8C%E5%85%89%E5%B8%82.json",
+      "range": "",
+      "status": 200,
+      "bytes": 8096,
+      "elapsedMs": 34
+    }
+  ],
+  "rows": [
+    {
+      "id": "tokyo-metropolitan",
+      "name": "東京都庁",
+      "variant": "fullwidth",
+      "input": "東京都新宿区西新宿２－８－１",
+      "normalized": "東京都新宿区西新宿2-8-1",
+      "reference": null,
+      "source": "https://www.metro.tokyo.lg.jp/about/kotsuannai",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "東京都新宿区西新宿二丁目",
+      "coordinates": {
+        "latitude": 35.68945,
+        "longitude": 139.691774
+      },
+      "remainingText": "8-1",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": false,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "tokyo-metropolitan",
+      "name": "東京都庁",
+      "variant": "halfwidth",
+      "input": "東京都新宿区西新宿2丁目8番1号",
+      "normalized": "東京都新宿区西新宿2-8-1",
+      "reference": null,
+      "source": "https://www.metro.tokyo.lg.jp/about/kotsuannai",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "東京都新宿区西新宿二丁目",
+      "coordinates": {
+        "latitude": 35.68945,
+        "longitude": 139.691774
+      },
+      "remainingText": "8-1",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": false,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "tokyo-metropolitan",
+      "name": "東京都庁",
+      "variant": "chome",
+      "input": "東京都新宿区西新宿二丁目8番1号",
+      "normalized": "東京都新宿区西新宿2-8-1",
+      "reference": null,
+      "source": "https://www.metro.tokyo.lg.jp/about/kotsuannai",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "東京都新宿区西新宿二丁目",
+      "coordinates": {
+        "latitude": 35.68945,
+        "longitude": 139.691774
+      },
+      "remainingText": "8-1",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": false,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "tokyo-metropolitan",
+      "name": "東京都庁",
+      "variant": "hyphen",
+      "input": "東京都新宿区西新宿2-8-1",
+      "normalized": "東京都新宿区西新宿2-8-1",
+      "reference": null,
+      "source": "https://www.metro.tokyo.lg.jp/about/kotsuannai",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "東京都新宿区西新宿二丁目",
+      "coordinates": {
+        "latitude": 35.68945,
+        "longitude": 139.691774
+      },
+      "remainingText": "8-1",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": false,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "tokyo-metropolitan",
+      "name": "東京都庁",
+      "variant": "town",
+      "input": "東京都新宿区西新宿2丁目",
+      "normalized": "東京都新宿区西新宿2丁目",
+      "reference": null,
+      "source": "https://www.metro.tokyo.lg.jp/about/kotsuannai",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "東京都新宿区西新宿二丁目",
+      "coordinates": {
+        "latitude": 35.68945,
+        "longitude": 139.691774
+      },
+      "remainingText": "",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": null,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "edogawa",
+      "name": "江戸川区役所本庁舎",
+      "variant": "fullwidth",
+      "input": "東京都江戸川区中央１－４－１",
+      "normalized": "東京都江戸川区中央1-4-1",
+      "reference": {
+        "latitude": 35.7068502,
+        "longitude": 139.8683379,
+        "source": "https://www.city.edogawa.tokyo.jp/documents/4408/20251211_kuyakusyo.csv",
+        "kind": "自治体公開の施設代表点（入口の測量点ではない）",
+        "license": "江戸川区 地図データ CC-BY、2025-12-11更新"
+      },
+      "source": "https://www.city.edogawa.tokyo.jp/e004/kuseijoho/opendata/map_data.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "東京都江戸川区中央一丁目4-1",
+      "coordinates": {
+        "latitude": 35.706588217,
+        "longitude": 139.867923553
+      },
+      "remainingText": "",
+      "matchedRecord": {
+        "blk_num": "4",
+        "rsdt_num": "1",
+        "rsdt_num2": "",
+        "point": [
+          139.867923553,
+          35.706588217
+        ]
+      },
+      "normalizationLevel": 8,
+      "pointLevel": 8,
+      "distanceMeters": 47.4,
+      "houseNumberMatched": true,
+      "buildingEntranceVerified": false,
+      "verdict": "参照施設付近・番地文字列一致（入口未確認）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "edogawa",
+      "name": "江戸川区役所本庁舎",
+      "variant": "halfwidth",
+      "input": "東京都江戸川区中央1丁目4番1号",
+      "normalized": "東京都江戸川区中央1-4-1",
+      "reference": {
+        "latitude": 35.7068502,
+        "longitude": 139.8683379,
+        "source": "https://www.city.edogawa.tokyo.jp/documents/4408/20251211_kuyakusyo.csv",
+        "kind": "自治体公開の施設代表点（入口の測量点ではない）",
+        "license": "江戸川区 地図データ CC-BY、2025-12-11更新"
+      },
+      "source": "https://www.city.edogawa.tokyo.jp/e004/kuseijoho/opendata/map_data.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "東京都江戸川区中央一丁目4-1",
+      "coordinates": {
+        "latitude": 35.706588217,
+        "longitude": 139.867923553
+      },
+      "remainingText": "",
+      "matchedRecord": {
+        "blk_num": "4",
+        "rsdt_num": "1",
+        "rsdt_num2": "",
+        "point": [
+          139.867923553,
+          35.706588217
+        ]
+      },
+      "normalizationLevel": 8,
+      "pointLevel": 8,
+      "distanceMeters": 47.4,
+      "houseNumberMatched": true,
+      "buildingEntranceVerified": false,
+      "verdict": "参照施設付近・番地文字列一致（入口未確認）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "edogawa",
+      "name": "江戸川区役所本庁舎",
+      "variant": "chome",
+      "input": "東京都江戸川区中央一丁目4番1号",
+      "normalized": "東京都江戸川区中央1-4-1",
+      "reference": {
+        "latitude": 35.7068502,
+        "longitude": 139.8683379,
+        "source": "https://www.city.edogawa.tokyo.jp/documents/4408/20251211_kuyakusyo.csv",
+        "kind": "自治体公開の施設代表点（入口の測量点ではない）",
+        "license": "江戸川区 地図データ CC-BY、2025-12-11更新"
+      },
+      "source": "https://www.city.edogawa.tokyo.jp/e004/kuseijoho/opendata/map_data.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "東京都江戸川区中央一丁目4-1",
+      "coordinates": {
+        "latitude": 35.706588217,
+        "longitude": 139.867923553
+      },
+      "remainingText": "",
+      "matchedRecord": {
+        "blk_num": "4",
+        "rsdt_num": "1",
+        "rsdt_num2": "",
+        "point": [
+          139.867923553,
+          35.706588217
+        ]
+      },
+      "normalizationLevel": 8,
+      "pointLevel": 8,
+      "distanceMeters": 47.4,
+      "houseNumberMatched": true,
+      "buildingEntranceVerified": false,
+      "verdict": "参照施設付近・番地文字列一致（入口未確認）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "edogawa",
+      "name": "江戸川区役所本庁舎",
+      "variant": "hyphen",
+      "input": "東京都江戸川区中央1-4-1",
+      "normalized": "東京都江戸川区中央1-4-1",
+      "reference": {
+        "latitude": 35.7068502,
+        "longitude": 139.8683379,
+        "source": "https://www.city.edogawa.tokyo.jp/documents/4408/20251211_kuyakusyo.csv",
+        "kind": "自治体公開の施設代表点（入口の測量点ではない）",
+        "license": "江戸川区 地図データ CC-BY、2025-12-11更新"
+      },
+      "source": "https://www.city.edogawa.tokyo.jp/e004/kuseijoho/opendata/map_data.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "東京都江戸川区中央一丁目4-1",
+      "coordinates": {
+        "latitude": 35.706588217,
+        "longitude": 139.867923553
+      },
+      "remainingText": "",
+      "matchedRecord": {
+        "blk_num": "4",
+        "rsdt_num": "1",
+        "rsdt_num2": "",
+        "point": [
+          139.867923553,
+          35.706588217
+        ]
+      },
+      "normalizationLevel": 8,
+      "pointLevel": 8,
+      "distanceMeters": 47.4,
+      "houseNumberMatched": true,
+      "buildingEntranceVerified": false,
+      "verdict": "参照施設付近・番地文字列一致（入口未確認）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "edogawa",
+      "name": "江戸川区役所本庁舎",
+      "variant": "town",
+      "input": "東京都江戸川区中央1丁目",
+      "normalized": "東京都江戸川区中央1丁目",
+      "reference": {
+        "latitude": 35.7068502,
+        "longitude": 139.8683379,
+        "source": "https://www.city.edogawa.tokyo.jp/documents/4408/20251211_kuyakusyo.csv",
+        "kind": "自治体公開の施設代表点（入口の測量点ではない）",
+        "license": "江戸川区 地図データ CC-BY、2025-12-11更新"
+      },
+      "source": "https://www.city.edogawa.tokyo.jp/e004/kuseijoho/opendata/map_data.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "東京都江戸川区中央一丁目",
+      "coordinates": {
+        "latitude": 35.706632,
+        "longitude": 139.869448
+      },
+      "remainingText": "",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": 103.1,
+      "houseNumberMatched": null,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "mitaka",
+      "name": "三鷹市役所",
+      "variant": "fullwidth",
+      "input": "東京都三鷹市野崎１－１－１",
+      "normalized": "東京都三鷹市野崎1-1-1",
+      "reference": null,
+      "source": "https://www.city.mitaka.lg.jp/c_service/001/001624.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "東京都三鷹市野崎一丁目",
+      "coordinates": {
+        "latitude": 35.682787,
+        "longitude": 139.55313
+      },
+      "remainingText": "1-1",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": false,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "mitaka",
+      "name": "三鷹市役所",
+      "variant": "halfwidth",
+      "input": "東京都三鷹市野崎1丁目1番1号",
+      "normalized": "東京都三鷹市野崎1-1-1",
+      "reference": null,
+      "source": "https://www.city.mitaka.lg.jp/c_service/001/001624.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "東京都三鷹市野崎一丁目",
+      "coordinates": {
+        "latitude": 35.682787,
+        "longitude": 139.55313
+      },
+      "remainingText": "1-1",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": false,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "mitaka",
+      "name": "三鷹市役所",
+      "variant": "chome",
+      "input": "東京都三鷹市野崎一丁目1番1号",
+      "normalized": "東京都三鷹市野崎1-1-1",
+      "reference": null,
+      "source": "https://www.city.mitaka.lg.jp/c_service/001/001624.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "東京都三鷹市野崎一丁目",
+      "coordinates": {
+        "latitude": 35.682787,
+        "longitude": 139.55313
+      },
+      "remainingText": "1-1",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": false,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "mitaka",
+      "name": "三鷹市役所",
+      "variant": "hyphen",
+      "input": "東京都三鷹市野崎1-1-1",
+      "normalized": "東京都三鷹市野崎1-1-1",
+      "reference": null,
+      "source": "https://www.city.mitaka.lg.jp/c_service/001/001624.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "東京都三鷹市野崎一丁目",
+      "coordinates": {
+        "latitude": 35.682787,
+        "longitude": 139.55313
+      },
+      "remainingText": "1-1",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": false,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "mitaka",
+      "name": "三鷹市役所",
+      "variant": "town",
+      "input": "東京都三鷹市野崎1丁目",
+      "normalized": "東京都三鷹市野崎1丁目",
+      "reference": null,
+      "source": "https://www.city.mitaka.lg.jp/c_service/001/001624.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "東京都三鷹市野崎一丁目",
+      "coordinates": {
+        "latitude": 35.682787,
+        "longitude": 139.55313
+      },
+      "remainingText": "",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": null,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "kanagawa",
+      "name": "神奈川県庁本庁舎",
+      "variant": "fullwidth",
+      "input": "神奈川県横浜市中区日本大通１",
+      "normalized": "神奈川県横浜市中区日本大通1",
+      "reference": null,
+      "source": "https://www.pref.kanagawa.jp/access/index.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "神奈川県横浜市中区日本大通",
+      "coordinates": {
+        "latitude": 35.446371,
+        "longitude": 139.642363
+      },
+      "remainingText": "1",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": false,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "kanagawa",
+      "name": "神奈川県庁本庁舎",
+      "variant": "halfwidth",
+      "input": "神奈川県横浜市中区日本大通1",
+      "normalized": "神奈川県横浜市中区日本大通1",
+      "reference": null,
+      "source": "https://www.pref.kanagawa.jp/access/index.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "神奈川県横浜市中区日本大通",
+      "coordinates": {
+        "latitude": 35.446371,
+        "longitude": 139.642363
+      },
+      "remainingText": "1",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": false,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "kanagawa",
+      "name": "神奈川県庁本庁舎",
+      "variant": "chome",
+      "input": null,
+      "normalized": null,
+      "reference": null,
+      "source": "https://www.pref.kanagawa.jp/access/index.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "not-applicable",
+      "returnedAddress": "",
+      "coordinates": null,
+      "remainingText": null,
+      "matchedRecord": null,
+      "normalizationLevel": null,
+      "pointLevel": null,
+      "distanceMeters": null,
+      "houseNumberMatched": null,
+      "buildingEntranceVerified": false,
+      "verdict": "該当表記なし",
+      "note": "丁目なし・該当表記なし"
+    },
+    {
+      "id": "kanagawa",
+      "name": "神奈川県庁本庁舎",
+      "variant": "hyphen",
+      "input": "神奈川県横浜市中区日本大通1",
+      "normalized": "神奈川県横浜市中区日本大通1",
+      "reference": null,
+      "source": "https://www.pref.kanagawa.jp/access/index.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "神奈川県横浜市中区日本大通",
+      "coordinates": {
+        "latitude": 35.446371,
+        "longitude": 139.642363
+      },
+      "remainingText": "1",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": false,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "kanagawa",
+      "name": "神奈川県庁本庁舎",
+      "variant": "town",
+      "input": "神奈川県横浜市中区日本大通",
+      "normalized": "神奈川県横浜市中区日本大通",
+      "reference": null,
+      "source": "https://www.pref.kanagawa.jp/access/index.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "神奈川県横浜市中区日本大通",
+      "coordinates": {
+        "latitude": 35.446371,
+        "longitude": 139.642363
+      },
+      "remainingText": "",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": null,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "aoba",
+      "name": "青葉区役所",
+      "variant": "fullwidth",
+      "input": "神奈川県横浜市青葉区市ケ尾町３１－４",
+      "normalized": "神奈川県横浜市青葉区市ケ尾町31-4",
+      "reference": null,
+      "source": "https://www.city.yokohama.lg.jp/aoba/kusei/tokei/hakusho.files/0342_20260416.pdf",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "神奈川県横浜市青葉区市ケ尾町",
+      "coordinates": {
+        "latitude": 35.548246,
+        "longitude": 139.543069
+      },
+      "remainingText": "31-4",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": false,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "aoba",
+      "name": "青葉区役所",
+      "variant": "halfwidth",
+      "input": "神奈川県横浜市青葉区市ケ尾町31-4",
+      "normalized": "神奈川県横浜市青葉区市ケ尾町31-4",
+      "reference": null,
+      "source": "https://www.city.yokohama.lg.jp/aoba/kusei/tokei/hakusho.files/0342_20260416.pdf",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "神奈川県横浜市青葉区市ケ尾町",
+      "coordinates": {
+        "latitude": 35.548246,
+        "longitude": 139.543069
+      },
+      "remainingText": "31-4",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": false,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "aoba",
+      "name": "青葉区役所",
+      "variant": "chome",
+      "input": null,
+      "normalized": null,
+      "reference": null,
+      "source": "https://www.city.yokohama.lg.jp/aoba/kusei/tokei/hakusho.files/0342_20260416.pdf",
+      "service": "Geolonia 3.1.3",
+      "evidence": "not-applicable",
+      "returnedAddress": "",
+      "coordinates": null,
+      "remainingText": null,
+      "matchedRecord": null,
+      "normalizationLevel": null,
+      "pointLevel": null,
+      "distanceMeters": null,
+      "houseNumberMatched": null,
+      "buildingEntranceVerified": false,
+      "verdict": "該当表記なし",
+      "note": "丁目なし・該当表記なし"
+    },
+    {
+      "id": "aoba",
+      "name": "青葉区役所",
+      "variant": "hyphen",
+      "input": "神奈川県横浜市青葉区市ケ尾町31-4",
+      "normalized": "神奈川県横浜市青葉区市ケ尾町31-4",
+      "reference": null,
+      "source": "https://www.city.yokohama.lg.jp/aoba/kusei/tokei/hakusho.files/0342_20260416.pdf",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "神奈川県横浜市青葉区市ケ尾町",
+      "coordinates": {
+        "latitude": 35.548246,
+        "longitude": 139.543069
+      },
+      "remainingText": "31-4",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": false,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "aoba",
+      "name": "青葉区役所",
+      "variant": "town",
+      "input": "神奈川県横浜市青葉区市ケ尾町",
+      "normalized": "神奈川県横浜市青葉区市ケ尾町",
+      "reference": null,
+      "source": "https://www.city.yokohama.lg.jp/aoba/kusei/tokei/hakusho.files/0342_20260416.pdf",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "神奈川県横浜市青葉区市ケ尾町",
+      "coordinates": {
+        "latitude": 35.548246,
+        "longitude": 139.543069
+      },
+      "remainingText": "",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": null,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "asao",
+      "name": "麻生区役所",
+      "variant": "fullwidth",
+      "input": "神奈川県川崎市麻生区万福寺１－５－１",
+      "normalized": "神奈川県川崎市麻生区万福寺1-5-1",
+      "reference": null,
+      "source": "https://www.city.kawasaki.jp/templates/faq/asao/0000124296.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "神奈川県川崎市麻生区万福寺一丁目",
+      "coordinates": {
+        "latitude": 35.603849,
+        "longitude": 139.505524
+      },
+      "remainingText": "5-1",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": false,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "asao",
+      "name": "麻生区役所",
+      "variant": "halfwidth",
+      "input": "神奈川県川崎市麻生区万福寺1丁目5番1号",
+      "normalized": "神奈川県川崎市麻生区万福寺1-5-1",
+      "reference": null,
+      "source": "https://www.city.kawasaki.jp/templates/faq/asao/0000124296.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "神奈川県川崎市麻生区万福寺一丁目",
+      "coordinates": {
+        "latitude": 35.603849,
+        "longitude": 139.505524
+      },
+      "remainingText": "5-1",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": false,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "asao",
+      "name": "麻生区役所",
+      "variant": "chome",
+      "input": "神奈川県川崎市麻生区万福寺一丁目5番1号",
+      "normalized": "神奈川県川崎市麻生区万福寺1-5-1",
+      "reference": null,
+      "source": "https://www.city.kawasaki.jp/templates/faq/asao/0000124296.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "神奈川県川崎市麻生区万福寺一丁目",
+      "coordinates": {
+        "latitude": 35.603849,
+        "longitude": 139.505524
+      },
+      "remainingText": "5-1",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": false,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "asao",
+      "name": "麻生区役所",
+      "variant": "hyphen",
+      "input": "神奈川県川崎市麻生区万福寺1-5-1",
+      "normalized": "神奈川県川崎市麻生区万福寺1-5-1",
+      "reference": null,
+      "source": "https://www.city.kawasaki.jp/templates/faq/asao/0000124296.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "神奈川県川崎市麻生区万福寺一丁目",
+      "coordinates": {
+        "latitude": 35.603849,
+        "longitude": 139.505524
+      },
+      "remainingText": "5-1",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": false,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "asao",
+      "name": "麻生区役所",
+      "variant": "town",
+      "input": "神奈川県川崎市麻生区万福寺1丁目",
+      "normalized": "神奈川県川崎市麻生区万福寺1丁目",
+      "reference": null,
+      "source": "https://www.city.kawasaki.jp/templates/faq/asao/0000124296.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "神奈川県川崎市麻生区万福寺一丁目",
+      "coordinates": {
+        "latitude": 35.603849,
+        "longitude": 139.505524
+      },
+      "remainingText": "",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": null,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "chiba",
+      "name": "千葉県庁中庁舎",
+      "variant": "fullwidth",
+      "input": "千葉県千葉市中央区市場町１－１",
+      "normalized": "千葉県千葉市中央区市場町1-1",
+      "reference": null,
+      "source": "https://www.pref.chiba.lg.jp/cate/kt/goannnai/access/index.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "千葉県千葉市中央区市場町",
+      "coordinates": {
+        "latitude": 35.604414,
+        "longitude": 140.123915
+      },
+      "remainingText": "1-1",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": false,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "chiba",
+      "name": "千葉県庁中庁舎",
+      "variant": "halfwidth",
+      "input": "千葉県千葉市中央区市場町1-1",
+      "normalized": "千葉県千葉市中央区市場町1-1",
+      "reference": null,
+      "source": "https://www.pref.chiba.lg.jp/cate/kt/goannnai/access/index.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "千葉県千葉市中央区市場町",
+      "coordinates": {
+        "latitude": 35.604414,
+        "longitude": 140.123915
+      },
+      "remainingText": "1-1",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": false,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "chiba",
+      "name": "千葉県庁中庁舎",
+      "variant": "chome",
+      "input": null,
+      "normalized": null,
+      "reference": null,
+      "source": "https://www.pref.chiba.lg.jp/cate/kt/goannnai/access/index.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "not-applicable",
+      "returnedAddress": "",
+      "coordinates": null,
+      "remainingText": null,
+      "matchedRecord": null,
+      "normalizationLevel": null,
+      "pointLevel": null,
+      "distanceMeters": null,
+      "houseNumberMatched": null,
+      "buildingEntranceVerified": false,
+      "verdict": "該当表記なし",
+      "note": "丁目なし・該当表記なし"
+    },
+    {
+      "id": "chiba",
+      "name": "千葉県庁中庁舎",
+      "variant": "hyphen",
+      "input": "千葉県千葉市中央区市場町1-1",
+      "normalized": "千葉県千葉市中央区市場町1-1",
+      "reference": null,
+      "source": "https://www.pref.chiba.lg.jp/cate/kt/goannnai/access/index.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "千葉県千葉市中央区市場町",
+      "coordinates": {
+        "latitude": 35.604414,
+        "longitude": 140.123915
+      },
+      "remainingText": "1-1",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": false,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "chiba",
+      "name": "千葉県庁中庁舎",
+      "variant": "town",
+      "input": "千葉県千葉市中央区市場町",
+      "normalized": "千葉県千葉市中央区市場町",
+      "reference": null,
+      "source": "https://www.pref.chiba.lg.jp/cate/kt/goannnai/access/index.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "千葉県千葉市中央区市場町",
+      "coordinates": {
+        "latitude": 35.604414,
+        "longitude": 140.123915
+      },
+      "remainingText": "",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": null,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "nagareyama",
+      "name": "流山市役所",
+      "variant": "fullwidth",
+      "input": "千葉県流山市平和台１－１－１",
+      "normalized": "千葉県流山市平和台1-1-1",
+      "reference": null,
+      "source": "https://www.city.nagareyama.chiba.jp/institution/1004033/index.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "千葉県流山市平和台一丁目1-1",
+      "coordinates": {
+        "latitude": 35.856247,
+        "longitude": 139.903878
+      },
+      "remainingText": "",
+      "matchedRecord": {
+        "prc_num1": "1",
+        "prc_num2": "1",
+        "prc_num3": ""
+      },
+      "normalizationLevel": 8,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": true,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "nagareyama",
+      "name": "流山市役所",
+      "variant": "halfwidth",
+      "input": "千葉県流山市平和台1丁目1番1号",
+      "normalized": "千葉県流山市平和台1-1-1",
+      "reference": null,
+      "source": "https://www.city.nagareyama.chiba.jp/institution/1004033/index.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "千葉県流山市平和台一丁目1-1",
+      "coordinates": {
+        "latitude": 35.856247,
+        "longitude": 139.903878
+      },
+      "remainingText": "",
+      "matchedRecord": {
+        "prc_num1": "1",
+        "prc_num2": "1",
+        "prc_num3": ""
+      },
+      "normalizationLevel": 8,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": true,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "nagareyama",
+      "name": "流山市役所",
+      "variant": "chome",
+      "input": "千葉県流山市平和台一丁目1番1号",
+      "normalized": "千葉県流山市平和台1-1-1",
+      "reference": null,
+      "source": "https://www.city.nagareyama.chiba.jp/institution/1004033/index.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "千葉県流山市平和台一丁目1-1",
+      "coordinates": {
+        "latitude": 35.856247,
+        "longitude": 139.903878
+      },
+      "remainingText": "",
+      "matchedRecord": {
+        "prc_num1": "1",
+        "prc_num2": "1",
+        "prc_num3": ""
+      },
+      "normalizationLevel": 8,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": true,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "nagareyama",
+      "name": "流山市役所",
+      "variant": "hyphen",
+      "input": "千葉県流山市平和台1-1-1",
+      "normalized": "千葉県流山市平和台1-1-1",
+      "reference": null,
+      "source": "https://www.city.nagareyama.chiba.jp/institution/1004033/index.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "千葉県流山市平和台一丁目1-1",
+      "coordinates": {
+        "latitude": 35.856247,
+        "longitude": 139.903878
+      },
+      "remainingText": "",
+      "matchedRecord": {
+        "prc_num1": "1",
+        "prc_num2": "1",
+        "prc_num3": ""
+      },
+      "normalizationLevel": 8,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": true,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "nagareyama",
+      "name": "流山市役所",
+      "variant": "town",
+      "input": "千葉県流山市平和台1丁目",
+      "normalized": "千葉県流山市平和台1丁目",
+      "reference": null,
+      "source": "https://www.city.nagareyama.chiba.jp/institution/1004033/index.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "千葉県流山市平和台一丁目",
+      "coordinates": {
+        "latitude": 35.856247,
+        "longitude": 139.903878
+      },
+      "remainingText": "",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": null,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "saitama",
+      "name": "埼玉県庁",
+      "variant": "fullwidth",
+      "input": "埼玉県さいたま市浦和区高砂３－１５－１",
+      "normalized": "埼玉県さいたま市浦和区高砂3-15-1",
+      "reference": null,
+      "source": "https://www.pref.saitama.lg.jp/kense/gaiyo/access.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "埼玉県さいたま市浦和区高砂三丁目15-1",
+      "coordinates": {
+        "latitude": 35.857183006,
+        "longitude": 139.650782253
+      },
+      "remainingText": "",
+      "matchedRecord": {
+        "blk_num": "15",
+        "rsdt_num": "1",
+        "rsdt_num2": "",
+        "point": [
+          139.650782253,
+          35.857183006
+        ]
+      },
+      "normalizationLevel": 8,
+      "pointLevel": 8,
+      "distanceMeters": null,
+      "houseNumberMatched": true,
+      "buildingEntranceVerified": false,
+      "verdict": "精度検証不可",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "saitama",
+      "name": "埼玉県庁",
+      "variant": "halfwidth",
+      "input": "埼玉県さいたま市浦和区高砂3丁目15番1号",
+      "normalized": "埼玉県さいたま市浦和区高砂3-15-1",
+      "reference": null,
+      "source": "https://www.pref.saitama.lg.jp/kense/gaiyo/access.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "埼玉県さいたま市浦和区高砂三丁目15-1",
+      "coordinates": {
+        "latitude": 35.857183006,
+        "longitude": 139.650782253
+      },
+      "remainingText": "",
+      "matchedRecord": {
+        "blk_num": "15",
+        "rsdt_num": "1",
+        "rsdt_num2": "",
+        "point": [
+          139.650782253,
+          35.857183006
+        ]
+      },
+      "normalizationLevel": 8,
+      "pointLevel": 8,
+      "distanceMeters": null,
+      "houseNumberMatched": true,
+      "buildingEntranceVerified": false,
+      "verdict": "精度検証不可",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "saitama",
+      "name": "埼玉県庁",
+      "variant": "chome",
+      "input": "埼玉県さいたま市浦和区高砂三丁目15番1号",
+      "normalized": "埼玉県さいたま市浦和区高砂3-15-1",
+      "reference": null,
+      "source": "https://www.pref.saitama.lg.jp/kense/gaiyo/access.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "埼玉県さいたま市浦和区高砂三丁目15-1",
+      "coordinates": {
+        "latitude": 35.857183006,
+        "longitude": 139.650782253
+      },
+      "remainingText": "",
+      "matchedRecord": {
+        "blk_num": "15",
+        "rsdt_num": "1",
+        "rsdt_num2": "",
+        "point": [
+          139.650782253,
+          35.857183006
+        ]
+      },
+      "normalizationLevel": 8,
+      "pointLevel": 8,
+      "distanceMeters": null,
+      "houseNumberMatched": true,
+      "buildingEntranceVerified": false,
+      "verdict": "精度検証不可",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "saitama",
+      "name": "埼玉県庁",
+      "variant": "hyphen",
+      "input": "埼玉県さいたま市浦和区高砂3-15-1",
+      "normalized": "埼玉県さいたま市浦和区高砂3-15-1",
+      "reference": null,
+      "source": "https://www.pref.saitama.lg.jp/kense/gaiyo/access.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "埼玉県さいたま市浦和区高砂三丁目15-1",
+      "coordinates": {
+        "latitude": 35.857183006,
+        "longitude": 139.650782253
+      },
+      "remainingText": "",
+      "matchedRecord": {
+        "blk_num": "15",
+        "rsdt_num": "1",
+        "rsdt_num2": "",
+        "point": [
+          139.650782253,
+          35.857183006
+        ]
+      },
+      "normalizationLevel": 8,
+      "pointLevel": 8,
+      "distanceMeters": null,
+      "houseNumberMatched": true,
+      "buildingEntranceVerified": false,
+      "verdict": "精度検証不可",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "saitama",
+      "name": "埼玉県庁",
+      "variant": "town",
+      "input": "埼玉県さいたま市浦和区高砂3丁目",
+      "normalized": "埼玉県さいたま市浦和区高砂3丁目",
+      "reference": null,
+      "source": "https://www.pref.saitama.lg.jp/kense/gaiyo/access.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "埼玉県さいたま市浦和区高砂三丁目",
+      "coordinates": {
+        "latitude": 35.856701,
+        "longitude": 139.650144
+      },
+      "remainingText": "",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": null,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "wako",
+      "name": "和光市役所",
+      "variant": "fullwidth",
+      "input": "埼玉県和光市広沢１－５",
+      "normalized": "埼玉県和光市広沢1-5",
+      "reference": null,
+      "source": "https://www.city.wako.lg.jp/shisei/city/1006196/1006197.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "埼玉県和光市広沢",
+      "coordinates": {
+        "latitude": 35.779974,
+        "longitude": 139.60131
+      },
+      "remainingText": "1-5",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": false,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "wako",
+      "name": "和光市役所",
+      "variant": "halfwidth",
+      "input": "埼玉県和光市広沢1-5",
+      "normalized": "埼玉県和光市広沢1-5",
+      "reference": null,
+      "source": "https://www.city.wako.lg.jp/shisei/city/1006196/1006197.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "埼玉県和光市広沢",
+      "coordinates": {
+        "latitude": 35.779974,
+        "longitude": 139.60131
+      },
+      "remainingText": "1-5",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": false,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "wako",
+      "name": "和光市役所",
+      "variant": "chome",
+      "input": null,
+      "normalized": null,
+      "reference": null,
+      "source": "https://www.city.wako.lg.jp/shisei/city/1006196/1006197.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "not-applicable",
+      "returnedAddress": "",
+      "coordinates": null,
+      "remainingText": null,
+      "matchedRecord": null,
+      "normalizationLevel": null,
+      "pointLevel": null,
+      "distanceMeters": null,
+      "houseNumberMatched": null,
+      "buildingEntranceVerified": false,
+      "verdict": "該当表記なし",
+      "note": "丁目なし・該当表記なし"
+    },
+    {
+      "id": "wako",
+      "name": "和光市役所",
+      "variant": "hyphen",
+      "input": "埼玉県和光市広沢1-5",
+      "normalized": "埼玉県和光市広沢1-5",
+      "reference": null,
+      "source": "https://www.city.wako.lg.jp/shisei/city/1006196/1006197.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "埼玉県和光市広沢",
+      "coordinates": {
+        "latitude": 35.779974,
+        "longitude": 139.60131
+      },
+      "remainingText": "1-5",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": false,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    },
+    {
+      "id": "wako",
+      "name": "和光市役所",
+      "variant": "town",
+      "input": "埼玉県和光市広沢",
+      "normalized": "埼玉県和光市広沢",
+      "reference": null,
+      "source": "https://www.city.wako.lg.jp/shisei/city/1006196/1006197.html",
+      "service": "Geolonia 3.1.3",
+      "evidence": "external-data",
+      "returnedAddress": "埼玉県和光市広沢",
+      "coordinates": {
+        "latitude": 35.779974,
+        "longitude": 139.60131
+      },
+      "remainingText": "",
+      "matchedRecord": null,
+      "normalizationLevel": 3,
+      "pointLevel": 3,
+      "distanceMeters": null,
+      "houseNumberMatched": null,
+      "buildingEntranceVerified": false,
+      "verdict": "街区・町丁目付近（サービス分類）",
+      "note": "番地・入口の独立照合は未完了"
+    }
+  ]
+}

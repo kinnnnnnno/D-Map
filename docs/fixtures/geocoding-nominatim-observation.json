@@ -1,0 +1,89 @@
+{
+  "results": [
+    {
+      "label": "東京都庁, 1, 西新宿二丁目, 西新宿, 新宿区, 東京, 163-8001, 日本",
+      "prefecture": "東京都",
+      "latitude": 35.6897391,
+      "longitude": 139.6929973,
+      "accuracy": "unknown",
+      "townFallback": true
+    },
+    {
+      "label": "東京都庁舎 第一本庁舎, 緑の橋, 西新宿二丁目, 西新宿, 新宿区, 東京, 160-0023, 日本",
+      "prefecture": "東京都",
+      "latitude": 35.6894957,
+      "longitude": 139.6917094,
+      "accuracy": "unknown",
+      "townFallback": true
+    },
+    {
+      "label": "東京都庁舎 第二本庁舎, 都庁前プロムナード, 西新宿二丁目, 西新宿, 新宿区, 東京, 160-0023, 日本",
+      "prefecture": "東京都",
+      "latitude": 35.687994,
+      "longitude": 139.6920808,
+      "accuracy": "unknown",
+      "townFallback": true
+    },
+    {
+      "label": "東京都議会議事堂, 1, 西新宿二丁目, 西新宿, 新宿区, 東京, 163-8001, 日本",
+      "prefecture": "東京都",
+      "latitude": 35.6896187,
+      "longitude": 139.6932639,
+      "accuracy": "unknown",
+      "townFallback": true
+    },
+    {
+      "label": "東京都庁第一本庁舎32階職員食堂, 1, 西新宿二丁目, 西新宿, 新宿区, 東京, 163-8001, 日本",
+      "prefecture": "東京都",
+      "latitude": 35.689709,
+      "longitude": 139.6915655,
+      "accuracy": "unknown",
+      "townFallback": true
+    }
+  ],
+  "calls": [
+    {
+      "query": [
+        "東京都新宿区西新宿2-8-1"
+      ],
+      "status": 200,
+      "elapsedMs": 1431,
+      "count": 0,
+      "types": []
+    },
+    {
+      "query": [
+        "東京都新宿区西新宿2丁目8番1号"
+      ],
+      "status": 200,
+      "elapsedMs": 566,
+      "count": 0,
+      "types": []
+    },
+    {
+      "query": [
+        "東京都, 新宿区西新宿2丁目"
+      ],
+      "status": 200,
+      "elapsedMs": 581,
+      "count": 5,
+      "types": [
+        "amenity",
+        "office",
+        "office",
+        "office",
+        "amenity"
+      ]
+    }
+  ],
+  "elapsedMs": 4845,
+  "input": "東京都新宿区西新宿２－８－１",
+  "date": "2026-10-26",
+  "note": "Tokyo Metropolitan Government public address; not proof of house accuracy",
+  "attribution": {
+    "creator": "OpenStreetMap contributors",
+    "source": "https://www.openstreetmap.org/copyright",
+    "license": "ODbL",
+    "note": "Existing Phase 3.2.3 observation reused; no new request"
+  }
+}
