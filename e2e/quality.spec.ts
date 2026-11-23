@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "./fixtures/test";
+import { waitForMapStable } from "./helpers/mapStability";
 
 test.beforeEach(async ({ page }) => {
   // JSTでは10/19、LAでは10/18となる瞬間に固定し、端末日付への依存を検出します。
@@ -251,9 +252,8 @@ test("UI-003 拡大中に検索し、条件・選択・描画領域を維持し�
   const marker = page.locator(".event-pin.is-selected");
   await expect(marker).toHaveCount(1);
   await expectMapCovered(page);
-  // 選択時のポップアップ補正パンが終わってから、拡大前の基準位置を測る。
-  // タイルが揃っていてもパンの途中の場合がある。比較の許容値は変更しない。
-  await expect(page.locator(".map .leaflet-pan-anim")).toHaveCount(0);
+  // クラスだけでは連続パンの終了を判断できない。移動・サイズ変更の安定後に測る。
+  await waitForMapStable(marker);
   const before = await marker.evaluate((element) => {
     const pin = element.getBoundingClientRect(),
       map = element.closest(".map")!.getBoundingClientRect();
@@ -263,6 +263,7 @@ test("UI-003 拡大中に検索し、条件・選択・描画領域を維持し�
     };
   });
   await expand(page);
+  await waitForMapStable(marker);
   await expect
     .poll(() =>
       marker.evaluate((element, previous) => {
