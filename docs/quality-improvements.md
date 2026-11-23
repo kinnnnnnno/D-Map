@@ -1,5 +1,39 @@
 # d-map 品質改善記録（Phase 1.1〜2.1）
 
+## Phase 3.3.3：住所検索のオフライン評価基盤（2026-11-16）
+
+### 背景・設計判断
+
+Phase 3.3.1〜3.3.2で、住所認識・返却座標の階層・参照点との距離を分ける必要性を整理した。既存10施設の独立参照は1件だけで、入口の測量点ではなかった。今回は新規検索をせず、保存済み実測を保持したまま評価の前提を明示する。
+
+参照地点台帳を別JSONで作成し、旧施設ID・名称・住所・出典、江戸川の座標と旧記録上の施設代表点という説明を引き継いだ。測地系・不確かさ・原測定方法・独立性・再配布条件・外部出典確認日は不明のまま記録した。台帳確認日を出典確認日と混同しない。
+
+標準ライブラリだけの `backend/tools/offline_geocoding.py` を追加。認識分類、座標種類、検索語/座標のフォールバック、原精度数値、元形式・版、参照点種類、距離、検証状態を分離する。既存Geolonia記録の旧距離や判定は新評価へそのまま流用しない。明示的なWGS84/EPSG:4326だけを距離計算へ使い、他測地系の変換を推測しない。
+
+複数候補は元順序を保持し、第一候補を集計する。施設IDの重複排除と表記別集計を分け、候補が多い施設を過大計上しない。ABRの共通中間形式の入力口を用意したが、ネイティブ応答の実変換・実測は未実施。部分入力の欠落ケースも未測定として残す。
+
+### 実際の結果と検証
+
+|検証|結果|
+|---|---|
+|専用pytest・最終版|52成功・0失敗、0.36秒。架空データと既存JSONの読み取り専用検証|
+|pytest全件・最終版|185成功・0失敗、119.17秒。上記52件を含む。既存Alembic CHECK警告1件|
+|オフラインCLI|終了コード0。既存Geolonia記録46件、ABR未測定46件、表記適用外各4件を別集計|
+|独立比較可能ケース/施設|両サービス0件/0施設。参照と応答の測地系等が未確認のため距離算出も0。検索失敗や精度の劣化を意味しない|
+|既存fixture/実測JSON|3ファイルのSHA-256不変を確認。旧47.4m等の観測記録は保持|
+|外部API通信・ABRダウンロード|0件。検索実測を繰り返していない|
+|Vitest・Playwright・型チェック・ESLint・フロントビルド|今回未実施。フロント・本番API・DB・依存設定の変更なし|
+
+途中の専用テスト43件は成功。拡充時にテスト補助変数のスコープ誤りで51成功・1失敗となり、補助コードを修正した。中間版の全件184成功も記録し、最終コードで改めて全件185成功を確認した。途中の結果を最終版の成功件数へ合算しない。
+
+テスト対象：座標欠損・非数値・bool・NaN/Infinity・巨大数・範囲外・逆転疑い、測地系不明/未変換、参照種別、不確かさ/独立性/利用条件の欠落、フォールバックと不明フラグ、複数候補の順序、模擬と実測の分離、施設/表記単位、ABR部分入力、旧JSON不変、秘密情報の非反射。専用テストではソケット接続を禁止する。
+
+### 制約・次Phase
+
+独立比較可能でも自動的に正確・入口確認済みとはしない。距離は参照点との概算水平距離としてのみ出力する。両軸の数値が有効範囲に収まる緯度経度逆転は数値だけでは検出できない。ABR原分類の対応、参照点の根拠確認・測地系変換、データ版の固定・比較用マニフェストと判定基準の事前固定をPhase 3.3.4で行う。
+
+追加4ファイル：`backend/tools/offline_geocoding.py`、`backend/tests/test_offline_geocoding.py`、`docs/fixtures/geocoding-reference-ledger.json`、`docs/offline-geocoding-evaluation.md`。更新は `docs/geocoding-comparison.md` と本ファイルのみ。既存アプリ・実測原本・イベント/ユーザーデータは変更していない。commit/pushなし。[使用方法・共通形式・台帳項目・受け入れ条件](offline-geocoding-evaluation.md)を参照。
+
 ## 公開前の最終確認・README整理・E2E反復検証（2026-10-28）
 
 ### 実施範囲と設計判断
@@ -190,14 +224,16 @@ E2Eではタイルをローカルのテスト画像で応答し、フォント�
 
 ## スクリーンショット
 
-実装前後の実画面を保存しました。地図画像は © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright)。地図タイルの内容・フォント・表示領域は環境や撮影時刻により異なります。
+以下の8枚は、Phase 1（Phase 1.1・1.2を含む）当時のUIと改善前後を記録した履歴画像です。現在の画面・機能を示すものではありません。地図画像は © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright)。地図タイルの内容・フォント・表示領域は環境や撮影時刻により異なります。
 
-- [Phase 1・改善前](screenshots/phase-1-before.jpg)
+- [Phase 1・改善前](screenshots/phase-1-before.png)
 - [Phase 1.1・通常表示](screenshots/phase-1-1-normal.jpg)
 - [Phase 1.1・カレンダー](screenshots/phase-1-1-calendar-full.jpg)
 - [Phase 1.1・PC拡大表示](screenshots/phase-1-1-expanded-full.jpg)
-- [Phase 1.1・モバイル検索パネル](screenshots/phase-1-1-mobile-search.jpg)
+- [Phase 1.1・モバイル検索パネル](screenshots/phase-1-1-mobile-search.png)
 - [Phase 1.1・モバイル地図](screenshots/phase-1-1-mobile-map.jpg)
+- [Phase 1.2・通常表示](screenshots/phase-1-2-normal.jpg)
+- [Phase 1.2・モバイル拡大表示](screenshots/phase-1-2-mobile-expanded.jpg)
 
 ## 変更・追加ファイル一覧
 
