@@ -1,0 +1,2 @@
+# Preserve the source bytes verified by geocoding-reference-ledger.json.
+/docs/fixtures/geocoding-addresses.json text eol=lf
